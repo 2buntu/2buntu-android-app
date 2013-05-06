@@ -1,10 +1,14 @@
 package com.twobuntu.twobuntu;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 // Displays the list of articles on the home page.
 public class ArticleListFragment extends ListFragment {
@@ -41,8 +45,8 @@ public class ArticleListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// TODO: load the list of articles.
+		final ListView listView = (ListView)getActivity().findViewById(R.id.article_list);
+		// TODO: set the adapter.
 	}
 
 	// Restores the previously selected article if possible.

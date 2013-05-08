@@ -1,14 +1,10 @@
 package com.twobuntu.twobuntu;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
-
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 // Displays the list of articles on the home page.
 public class ArticleListFragment extends ListFragment {
@@ -41,19 +37,23 @@ public class ArticleListFragment extends ListFragment {
 	public ArticleListFragment() {
 	}
 
+	// The adapter used for retrieving article information.
+	private ArticleAdapter mAdapter;
+	
 	// Begins loading the list of articles.
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		final ListView listView = (ListView)getActivity().findViewById(R.id.article_list);
-		// TODO: set the adapter.
+		mAdapter = new ArticleAdapter(getActivity());
+		// Set the list adapter.
+		setListAdapter(mAdapter);
+		mAdapter.refresh();
 	}
 
 	// Restores the previously selected article if possible.
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
 		// Restore the previously serialized activated item position.
 		if(savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION))
 			setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
@@ -62,20 +62,17 @@ public class ArticleListFragment extends ListFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-
 		// Activities containing this fragment must implement its callbacks.
 		if(!(activity instanceof SelectionCallback)) {
 			throw new IllegalStateException(
 					"Activity must implement fragment's callbacks.");
 		}
-
 		mCallbacks = (SelectionCallback)activity;
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
-
 		// Reset the active callbacks interface to the dummy implementation.
 		mCallbacks = sDummyCallback;
 	}
@@ -84,7 +81,6 @@ public class ArticleListFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
-		
 		// TODO: replace 0 with the actual article ID.
 		mCallbacks.onArticleSelected(0);
 	}
@@ -109,7 +105,6 @@ public class ArticleListFragment extends ListFragment {
 			getListView().setItemChecked(mActivatedPosition, false);
 		else
 			getListView().setItemChecked(position, true);
-
 		mActivatedPosition = position;
 	}
 }

@@ -1,4 +1,4 @@
-package com.twobuntu.twobuntu;
+package com.twobuntu.article;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,8 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.twobuntu.twobuntu.APIRequest;
+import com.twobuntu.twobuntu.R;
 
-public class ArticleAdapter extends ArrayAdapter<JSONObject> {
+public class ArticleAdapter extends ArrayAdapter<Article> {
 	
 	// Refreshes the list of articles.
 	public void refresh() {
@@ -21,6 +23,7 @@ public class ArticleAdapter extends ArrayAdapter<JSONObject> {
 			
 			@Override
 			public void onFailure(Throwable e, String response) {
+				// TODO: worst error handling ever.
 			    System.out.println("Error! " + response);
 			}
 			
@@ -31,9 +34,10 @@ public class ArticleAdapter extends ArrayAdapter<JSONObject> {
 					clear();
 					JSONArray articles = response.getJSONArray("articles");
 					for(int i=0; i<articles.length(); ++i)
-						add(articles.getJSONObject(i));
+						add(new Article(articles.getJSONObject(i)));
 				} catch (JSONException e) {
-					// TODO: print some sort of error.
+					// TODO: print a better error message.
+					System.out.println("JSON error of some sort.");
 				}
 			}
 		});
@@ -47,12 +51,8 @@ public class ArticleAdapter extends ArrayAdapter<JSONObject> {
 	// Displays an individual article in the list.
 	public View getView(int position, View convertView, ViewGroup parent) {
 		convertView = super.getView(position, convertView, parent);
-		JSONObject item = getItem(position);
-		try {
-			((TextView)convertView.findViewById(R.id.article_list_item_title)).setText(item.getString("title"));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-		}
+		Article article = getItem(position);
+		((TextView)convertView.findViewById(R.id.article_list_item_title)).setText(article.title);
 		return convertView;
 	}
 }

@@ -18,8 +18,8 @@ public class ArticleDetailActivity extends FragmentActivity {
 		// Recreate the fragment if the saved instance state is empty.
 		if (savedInstanceState == null) {
 			Bundle arguments = new Bundle();
-			arguments.putString(ArticleDetailFragment.ARG_ARTICLE_ID,
-					            getIntent().getStringExtra(ArticleDetailFragment.ARG_ARTICLE_ID));
+			arguments.putInt(ArticleDetailFragment.ARG_ARTICLE_ID,
+					         getIntent().getIntExtra(ArticleDetailFragment.ARG_ARTICLE_ID, 0));
 			ArticleDetailFragment fragment = new ArticleDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()

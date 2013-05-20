@@ -1,12 +1,12 @@
 package com.twobuntu.twobuntu;
 
-import com.twobuntu.article.ArticleAdapter;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
+
+import com.twobuntu.article.ArticleAdapter;
 
 // Displays the list of articles on the home page.
 public class ArticleListFragment extends ListFragment {
@@ -49,7 +49,7 @@ public class ArticleListFragment extends ListFragment {
 		mAdapter = new ArticleAdapter(getActivity());
 		// Set the list adapter.
 		setListAdapter(mAdapter);
-		mAdapter.refresh();
+		mAdapter.refresh(getActivity());
 	}
 
 	// Restores the previously selected article if possible.
@@ -83,8 +83,7 @@ public class ArticleListFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
-		// TODO: replace 0 with the actual article ID.
-		mCallbacks.onArticleSelected(0);
+		mCallbacks.onArticleSelected(mAdapter.getItem(position).mId);
 	}
 
 	// Save the currently selected article.

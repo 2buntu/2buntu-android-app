@@ -2,7 +2,6 @@ package com.twobuntu.article;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.view.View;
@@ -10,35 +9,27 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.twobuntu.twobuntu.APIRequest;
 import com.twobuntu.twobuntu.R;
 
 public class ArticleAdapter extends ArrayAdapter<Article> {
 	
 	// Refreshes the list of articles.
-	public void refresh() {
+	public void refresh(Context context) {
 		// Make the API request for the list data.
-		APIRequest.load("/articles", new JsonHttpResponseHandler() {
+		APIRequest.load(context, "/articles", new APIRequest.ResponseCallback() {
 			
 			@Override
-			public void onFailure(Throwable e, String response) {
+			public void onFailure(String response) {
 				// TODO: worst error handling ever.
-			    System.out.println("Error! " + response);
+			    System.out.println("Error: " + response);
 			}
 			
 			@Override
-			public void onSuccess(JSONObject response) {
-				try {
-					// Clear the current contents and insert the JSONObjects.
-					clear();
-					JSONArray articles = response.getJSONArray("articles");
-					for(int i=0; i<articles.length(); ++i)
-						add(new Article(articles.getJSONObject(i)));
-				} catch (JSONException e) {
-					// TODO: print a better error message.
-					System.out.println("JSON error of some sort.");
-				}
+			public void onSuccess(JSONArray items) throws JSONException {
+				// Clear the current contents and insert the JSONObjects.
+				clear();
+				for(int i=0; i<items.length(); ++i)
+					add(new Article(items.getJSONObject(i)));
 			}
 		});
 	}
@@ -52,7 +43,8 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		convertView = super.getView(position, convertView, parent);
 		Article article = getItem(position);
-		((TextView)convertView.findViewById(R.id.article_list_item_title)).setText(article.title);
+		((TextView)convertView.findViewById(R.id.article_list_item_title)).setText(article.mTitle);
+		// TODO: load and display the Gravatars.
 		return convertView;
 	}
 }

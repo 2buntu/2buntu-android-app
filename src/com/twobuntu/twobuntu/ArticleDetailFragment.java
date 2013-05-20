@@ -34,6 +34,7 @@ public class ArticleDetailFragment extends Fragment {
 				// Sets the webview's contents to that of the article's body.
 				@Override
 				public void onBodyLoaded() {
+					getActivity().setTitle(mArticle.mTitle);
 					WebView webView = (WebView)getActivity().findViewById(R.id.article_content);
 					webView.loadData(mArticle.mBody, "text/html", "utf-8");
 				}

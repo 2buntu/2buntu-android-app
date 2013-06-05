@@ -3,10 +3,13 @@ package com.twobuntu.twobuntu;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ListView;
 
 import com.twobuntu.article.ArticleAdapter;
+import com.twobuntu.article.ArticleAdapter.RefreshListener;
 
 // Displays the list of articles on the home page.
 public class ArticleListFragment extends ListFragment {
@@ -46,9 +49,16 @@ public class ArticleListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mAdapter = new ArticleAdapter(getActivity());
+		setHasOptionsMenu(true);
 		// Set the list adapter.
-		setListAdapter(mAdapter);
+		mAdapter = new ArticleAdapter(getActivity());
+		mAdapter.setOnRefreshListener(new RefreshListener() {
+			
+			@Override
+			public void onRefresh() {
+				setListAdapter(mAdapter);
+			}
+		});
 		mAdapter.refresh(getActivity());
 	}
 
@@ -70,6 +80,12 @@ public class ArticleListFragment extends ListFragment {
 					"Activity must implement fragment's callbacks.");
 		}
 		mCallbacks = (SelectionCallback)activity;
+	}
+	
+	// Add the "toolbar" buttons to the action bar.
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.activity_article_list, menu);
 	}
 
 	@Override

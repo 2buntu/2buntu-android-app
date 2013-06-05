@@ -4,7 +4,6 @@
     <string name="app_name">2buntu</string>
     <string name="title_article_detail">Article Detail</string>
     <string name="description_gravatar">User Gravatar</string>
-    <string name="dialog_title_please_wait">Please Wait</string>
-    <string name="dialog_loading_data">Loading data from 2buntu…</string>
+    <string name="action_refresh">Refresh</string>
 
 </resources>

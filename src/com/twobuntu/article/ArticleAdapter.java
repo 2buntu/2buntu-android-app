@@ -38,7 +38,7 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
 	// Refreshes the list of articles.
 	public void refresh(Context context) {
 		// Make the API request for the list data.
-		APIRequest.load(context, "/articles", new APIRequest.ResponseCallback() {
+		APIRequest.load("/articles", new APIRequest.ResponseCallback() {
 			
 			@Override
 			public void onFailure(String response) {

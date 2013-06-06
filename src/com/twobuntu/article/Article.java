@@ -31,7 +31,7 @@ public class Article {
 	
 	// Initializes the article with the specified ID.
 	public Article(final Context context, int id, final BodyLoadedCallback callback) {
-		APIRequest.load(context, "/articles/" + id, new APIRequest.ResponseCallback() {
+		APIRequest.load("/articles/" + id, new APIRequest.ResponseCallback() {
 			
 			// Display an error message on failure.
 			@Override

@@ -16,28 +16,17 @@ public class ArticleListFragment extends ListFragment {
 
 	// Used for storing the ID of the current article.
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
-	// The callback used for notification of article selection.
-	private SelectionCallback mCallbacks = sDummyCallback;
+	
+	// Interface for providing notification of list item selections.
+	public interface ArticleSelectedListener {
+		void onArticleSelected(int id);
+	}
+	
+	// The current listener for article selection events.
+	private ArticleSelectedListener mListener;
 
 	// The currently selected article.
 	private int mActivatedPosition = ListView.INVALID_POSITION;
-
-	// Interface for notification of article selection changes.
-	public interface SelectionCallback {
-		
-		// An article is selected.
-		public void onArticleSelected(int id);
-	}
-
-	// A "dummy" implementation of the SelectionCallback class. 
-	private static SelectionCallback sDummyCallback = new SelectionCallback() {
-		
-		// Do nothing.
-		@Override
-		public void onArticleSelected(int id) {
-		}
-	};
 
 	public ArticleListFragment() {
 	}
@@ -49,8 +38,10 @@ public class ArticleListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// This fragment has a menu and should be retained during configuration changes.
 		setHasOptionsMenu(true);
-		// Set the list adapter.
+		setRetainInstance(true);
+		// Create the adapter and set it when the refresh completes.
 		mAdapter = new ArticleAdapter(getActivity());
 		mAdapter.setOnRefreshListener(new RefreshListener() {
 			
@@ -71,15 +62,13 @@ public class ArticleListFragment extends ListFragment {
 			setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
 	}
 
+	// Grab a pointer to the listener for article selection events.
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		// Activities containing this fragment must implement its callbacks.
-		if(!(activity instanceof SelectionCallback)) {
-			throw new IllegalStateException(
-					"Activity must implement fragment's callbacks.");
-		}
-		mCallbacks = (SelectionCallback)activity;
+		if(!(activity instanceof ArticleSelectedListener))
+			throw new IllegalStateException("Activity must implement ArticleSelectedListener.");
+		mListener = (ArticleSelectedListener)activity;
 	}
 	
 	// Add the "toolbar" buttons to the action bar.
@@ -88,18 +77,19 @@ public class ArticleListFragment extends ListFragment {
 		inflater.inflate(R.menu.activity_article_list, menu);
 	}
 
+	// When the activity is destroyed, remove the callback.
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		// Reset the active callbacks interface to the dummy implementation.
-		mCallbacks = sDummyCallback;
+		mListener = null;
 	}
 
-	// An item has been selected, so invoke the callback.
+	// Process click events for the list view..
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
-		mCallbacks.onArticleSelected(mAdapter.getItem(position).mId);
+		if(mListener != null)
+		    mListener.onArticleSelected(mAdapter.getItem(position).mId);
 	}
 
 	// Save the currently selected article.

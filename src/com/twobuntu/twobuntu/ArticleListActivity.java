@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentActivity;
 // This activity displays a list of articles on smaller devices and also article
 // contents on devices with large enough screens (like tablets).
 public class ArticleListActivity extends FragmentActivity implements
-		ArticleListFragment.SelectionCallback {
+		ArticleListFragment.ArticleSelectedListener {
 
 	// Whether we are displaying two panes or not.
 	private boolean mTwoPane;

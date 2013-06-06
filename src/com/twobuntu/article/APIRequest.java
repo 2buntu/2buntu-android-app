@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.twobuntu.cache.Cache;
 
 // Wraps calls to the 2buntu API.
 public class APIRequest {
@@ -23,7 +22,6 @@ public class APIRequest {
 	
 	// The HTTP client and associated cache used for all requests.
 	private static AsyncHttpClient mClient = new AsyncHttpClient();
-	private static Cache<JSONObject> mCache = new Cache<JSONObject>();
 	
 	// Attempts to invoke the specified callback.
 	private static boolean invokeCallback(ResponseCallback callback, JSONObject response) {
@@ -39,11 +37,6 @@ public class APIRequest {
 	
 	// Attempts to load the specified page and invoke the specified callback when the request completes.
 	public static void load(final String path, final ResponseCallback callback) {
-		// First check to see if the data was cached and return it if so.
-		JSONObject response = mCache.get(path);
-		if(response != null)
-			invokeCallback(callback, response);
-		// If it's not in the cache, fetch the data.
 		mClient.get("http://" + DOMAIN + "/api" + path, new JsonHttpResponseHandler() {
 			
 			// On failure, invoke the error callback.
@@ -55,8 +48,7 @@ public class APIRequest {
 			// On success, invoke the success callback and store the data in the cache.
 			@Override
 			public void onSuccess(JSONObject response) {
-				if(invokeCallback(callback, response))
-				    mCache.set(path, response);
+				invokeCallback(callback, response);
 			}
 		});
 	}

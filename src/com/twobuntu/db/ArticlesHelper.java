@@ -31,7 +31,7 @@ public class ArticlesHelper extends SQLiteOpenHelper {
 
 	// Updates the tables in the database (for example, after upgrading the app).
 	@Override
-	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// We are on the first version, so do nothing.
 	}
 }

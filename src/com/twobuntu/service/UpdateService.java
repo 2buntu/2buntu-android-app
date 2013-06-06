@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -37,14 +38,21 @@ public class UpdateService extends IntentService {
 	// The latest update that we have against the API.
 	private long mLastUpdate;
 	
-	// Adds an individual article to the database.
-	private void addArticle(JSONObject article) {
-		//...
-	}
-	
-	// Updates an individual article in the database.
-	private void updateArticle(JSONObject article) {
-		//...
+	// Creates a ContentValues object from the provided JSON.
+	private ContentValues convertToContentValues(JSONObject article) throws JSONException {
+		ContentValues values = new ContentValues();
+		values.put(Articles.COLUMN_ID, article.getInt("id"));
+		// TODO: it might be better to have the author data in a separate table.
+		JSONObject author = article.getJSONObject("author");
+		values.put(Articles.COLUMN_AUTHOR_NAME, author.getString("name"));
+		values.put(Articles.COLUMN_AUTHOR_EMAIL_HASH, author.getString("email_hash"));
+		values.put(Articles.COLUMN_TITLE, article.getString("title"));
+		values.put(Articles.COLUMN_BODY, article.getString("body"));
+		// Tags are inserted as comma-separated values.
+		values.put(Articles.COLUMN_TAGS, article.getJSONArray("tags").join(","));
+		values.put(Articles.COLUMN_CREATION_DATE, article.getInt("creation_date"));
+		values.put(Articles.COLUMN_LAST_MODIFICATION_DATE, article.getInt("last_modification_date"));
+		return values;
 	}
 	
 	// Processes the JSON received from the API.
@@ -58,9 +66,12 @@ public class UpdateService extends IntentService {
 						{ Articles.COLUMN_ID }, Articles.COLUMN_ID + " = " + article.getInt("id"),
 						null, null, null, null);
 				if(cursor.getCount() == 0)
-					addArticle(article);
+					mDatabase.getWritableDatabase().insert(Articles.TABLE_NAME, null,
+							convertToContentValues(article));
 				else
-					updateArticle(article);
+					mDatabase.getWritableDatabase().update(Articles.TABLE_NAME,
+							convertToContentValues(article),
+							Articles.COLUMN_ID + " = " + article.getInt("id"), null);
 			}
 		} catch (JSONException e) {
 			Log.e("UpdateService", e.toString());

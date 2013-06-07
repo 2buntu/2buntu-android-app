@@ -1,14 +1,11 @@
 package com.twobuntu.twobuntu;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-
-import com.twobuntu.article.Article;
-import com.twobuntu.article.Article.BodyLoadedCallback;
 
 // Displays details about the particular article.
 public class ArticleDetailFragment extends Fragment {
@@ -20,12 +17,13 @@ public class ArticleDetailFragment extends Fragment {
 	}
 	
 	// The currently displayed article.
-	private Article mArticle;
+	//private Article mArticle;
 	
 	// Begins loading the article and preparing it for display.
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		/*
 		// If the article ID was provided, then load it.
 		if (getArguments().containsKey(ARG_ARTICLE_ID)) {
 			mArticle = new Article(getActivity(), getArguments().getInt(ARG_ARTICLE_ID),
@@ -40,6 +38,7 @@ public class ArticleDetailFragment extends Fragment {
 				}
 			});
 		}
+		*/
 	}
 
 	@Override

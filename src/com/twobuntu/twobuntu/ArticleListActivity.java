@@ -1,12 +1,12 @@
 package com.twobuntu.twobuntu;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 // This activity displays a list of articles on smaller devices and also article
 // contents on devices with large enough screens (like tablets).
-public class ArticleListActivity extends FragmentActivity implements
+public class ArticleListActivity extends Activity implements
 		ArticleListFragment.ArticleSelectedListener {
 
 	// Whether we are displaying two panes or not.
@@ -17,12 +17,12 @@ public class ArticleListActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_article_list);
-
+		
 		// Attempt to find the article content container - which will only
 		// be present on devices with larger screens.
 		if (findViewById(R.id.article_detail_container) != null) {
 			mTwoPane = true;
-			((ArticleListFragment) getSupportFragmentManager()
+			((ArticleListFragment) getFragmentManager()
 					.findFragmentById(R.id.article_list))
 					.setActivateOnItemClick(true);
 		}
@@ -37,7 +37,7 @@ public class ArticleListActivity extends FragmentActivity implements
 			arguments.putInt(ArticleDetailFragment.ARG_ARTICLE_ID, id);
 			ArticleDetailFragment fragment = new ArticleDetailFragment();
 			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction()
+			getFragmentManager().beginTransaction()
 					.replace(R.id.article_detail_container, fragment).commit();
 
 		} else {

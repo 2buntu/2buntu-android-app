@@ -1,15 +1,15 @@
 package com.twobuntu.twobuntu;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
-import com.twobuntu.article.ArticleAdapter;
-import com.twobuntu.article.ArticleAdapter.RefreshListener;
+import com.twobuntu.db.Articles;
 
 // Displays the list of articles on the home page.
 public class ArticleListFragment extends ListFragment {
@@ -24,15 +24,12 @@ public class ArticleListFragment extends ListFragment {
 	
 	// The current listener for article selection events.
 	private ArticleSelectedListener mListener;
-
+	
 	// The currently selected article.
-	private int mActivatedPosition = ListView.INVALID_POSITION;
-
-	public ArticleListFragment() {
-	}
+	private int mCurrentArticle = ListView.INVALID_POSITION;
 
 	// The adapter used for retrieving article information.
-	private ArticleAdapter mAdapter;
+	private SimpleCursorAdapter mAdapter;
 	
 	// Begins loading the list of articles.
 	@Override
@@ -41,16 +38,12 @@ public class ArticleListFragment extends ListFragment {
 		// This fragment has a menu and should be retained during configuration changes.
 		setHasOptionsMenu(true);
 		setRetainInstance(true);
-		// Create the adapter and set it when the refresh completes.
-		mAdapter = new ArticleAdapter(getActivity());
-		mAdapter.setOnRefreshListener(new RefreshListener() {
-			
-			@Override
-			public void onRefresh() {
-				setListAdapter(mAdapter);
-			}
-		});
-		mAdapter.refresh(getActivity());
+		// Create and initialize the cursor adapter.
+		mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
+				new String[] { Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME },
+				new int[] { android.R.id.text1, android.R.id.text2 }, 0);
+		// Set the adapter.
+		setListAdapter(mAdapter);
 	}
 
 	// Restores the previously selected article if possible.
@@ -88,16 +81,16 @@ public class ArticleListFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
-		if(mListener != null)
-		    mListener.onArticleSelected(mAdapter.getItem(position).mId);
+		//if(mListener != null)
+		//    mListener.onArticleSelected(mAdapter.getItem(position).mId);
 	}
 
 	// Save the currently selected article.
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(mActivatedPosition != ListView.INVALID_POSITION)
-			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
+		if(mCurrentArticle != ListView.INVALID_POSITION)
+			outState.putInt(STATE_ACTIVATED_POSITION, mCurrentArticle);
 	}
 
 	// This causes list items to enter the activated state when clicked.
@@ -109,9 +102,9 @@ public class ArticleListFragment extends ListFragment {
 
 	private void setActivatedPosition(int position) {
 		if(position == ListView.INVALID_POSITION)
-			getListView().setItemChecked(mActivatedPosition, false);
+			getListView().setItemChecked(mCurrentArticle, false);
 		else
 			getListView().setItemChecked(position, true);
-		mActivatedPosition = position;
+		mCurrentArticle = position;
 	}
 }

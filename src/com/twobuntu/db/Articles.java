@@ -12,7 +12,7 @@ public class Articles {
 	public static final String TABLE_NAME = "article";
 	
 	// The columns in the article table.
-	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_AUTHOR_NAME = "author_name";
 	public static final String COLUMN_AUTHOR_EMAIL_HASH = "author_email_hash";
 	public static final String COLUMN_TITLE = "title";

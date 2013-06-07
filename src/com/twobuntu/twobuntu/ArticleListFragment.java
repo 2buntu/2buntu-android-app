@@ -2,6 +2,10 @@ package com.twobuntu.twobuntu;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,10 +13,11 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.twobuntu.db.ArticleProvider;
 import com.twobuntu.db.Articles;
 
 // Displays the list of articles on the home page.
-public class ArticleListFragment extends ListFragment {
+public class ArticleListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	// Used for storing the ID of the current article.
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
@@ -31,19 +36,21 @@ public class ArticleListFragment extends ListFragment {
 	// The adapter used for retrieving article information.
 	private SimpleCursorAdapter mAdapter;
 	
-	// Begins loading the list of articles.
+	// Begin loading the articles.
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// This fragment has a menu and should be retained during configuration changes.
 		setHasOptionsMenu(true);
 		setRetainInstance(true);
-		// Create and initialize the cursor adapter.
+		// Initialize the cursor adapter.
 		mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
 				new String[] { Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME },
 				new int[] { android.R.id.text1, android.R.id.text2 }, 0);
-		// Set the adapter.
+		// Set the adapter and begin loading the data.
 		setListAdapter(mAdapter);
+		setListShown(false);
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	// Restores the previously selected article if possible.
@@ -100,11 +107,34 @@ public class ArticleListFragment extends ListFragment {
 				ListView.CHOICE_MODE_NONE);
 	}
 
+	// TODO: figure out if this is needed.
 	private void setActivatedPosition(int position) {
 		if(position == ListView.INVALID_POSITION)
 			getListView().setItemChecked(mCurrentArticle, false);
 		else
 			getListView().setItemChecked(position, true);
 		mCurrentArticle = position;
+	}
+
+	// TODO: document this method.
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		// Create the query used by the adapter.
+		return new CursorLoader(getActivity(), ArticleProvider.ARTICLES_URI, 
+				new String[] { Articles.COLUMN_ID, Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME },
+				null, null, Articles.COLUMN_CREATION_DATE);
+	}
+
+	// TODO ...and this one.
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		mAdapter.swapCursor(data);
+		setListShown(true);
+	}
+
+	// TODO ...and this one.
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mAdapter.swapCursor(null);
 	}
 }

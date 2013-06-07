@@ -5,13 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 // Initializes the database and provides means of accessing it.
-public class ArticlesHelper extends SQLiteOpenHelper {
+public class ArticleHelper extends SQLiteOpenHelper {
 
 	// The name and version of the database.
 	private static final String DATABASE_NAME = "twobuntu";
 	private static final int DATABASE_VERSION = 1;
 	
-	public ArticlesHelper(Context context) {
+	public ArticleHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 	

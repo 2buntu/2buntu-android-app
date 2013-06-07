@@ -45,11 +45,18 @@
         <service android:name="com.twobuntu.service.UpdateService" />
         
         <!-- A receiver for boot broadcast events. -->
-        <receiver android:name="com.example.MyBroadcastReceiver">
+        <receiver
+            android:name="com.example.MyBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        
+        <!-- A content provider for article information. -->
+        <provider
+            android:name="com.twobuntu.db.ArticleProvider"
+            android:authorities="com.twobuntu.articleprovider"
+            android:exported="false" />
         
     </application>
 </manifest>

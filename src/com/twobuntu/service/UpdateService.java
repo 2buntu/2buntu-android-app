@@ -20,7 +20,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.twobuntu.db.Articles;
-import com.twobuntu.db.ArticlesHelper;
+import com.twobuntu.db.ArticleHelper;
 import com.twobuntu.twobuntu.R;
 
 // Periodically updates the internal database to reflect the current articles on the site.
@@ -31,7 +31,7 @@ public class UpdateService extends IntentService {
 	private static final String DOMAIN_NAME = "2buntu.com";
 	
 	// The database we are updating.
-	private ArticlesHelper mDatabase;
+	private ArticleHelper mDatabase;
 	
 	// Access to shared preferences.
 	private SharedPreferences mPreferences;
@@ -98,7 +98,7 @@ public class UpdateService extends IntentService {
 	
 	public UpdateService() {
 		super("UpdateService");
-		mDatabase = new ArticlesHelper(this);
+		mDatabase = new ArticleHelper(this);
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 	

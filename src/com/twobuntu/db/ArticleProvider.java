@@ -12,8 +12,9 @@ public class ArticleProvider extends ContentProvider {
 	// The authority for the provider.
 	private static final String AUTHORITY = "com.twobuntu.articleprovider";
 	
-	// This URI is public and intended to be used by other parts of the application.
-	public static final Uri ARTICLES_URI = Uri.parse("content://" + AUTHORITY + "/articles");
+	// These URIs are public and intended to be used by other parts of the application.
+	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/articles");
+	public static final Uri CONTENT_LOOKUP_URI = CONTENT_URI; // same thing
 	
 	// Codes that represent individual URIs.
 	private static final int ARTICLES = 1;
@@ -65,8 +66,10 @@ public class ArticleProvider extends ContentProvider {
 				throw new IllegalArgumentException();
 		}
 		// Return the cursor to the user.
-		return mHelper.getReadableDatabase().query(Articles.TABLE_NAME, projection,
+		Cursor cursor = mHelper.getReadableDatabase().query(Articles.TABLE_NAME, projection,
 				selection, selectionArgs, null, null, sortOrder);
+		cursor.setNotificationUri(getContext().getContentResolver(), uri);
+		return cursor;
 	}
 	
 	// Inserts an article into the database.
@@ -77,17 +80,23 @@ public class ArticleProvider extends ContentProvider {
 		// Perform the actual insert operation.
 		long id = mHelper.getWritableDatabase().insert(Articles.TABLE_NAME, null, values);
 		// Generate the URI of the new article.
-		Uri articleUri = Uri.parse("content://" + AUTHORITY + "/article/" + id);
+		Uri articleUri = Uri.withAppendedPath(CONTENT_LOOKUP_URI, "/" + id);
 		getContext().getContentResolver().notifyChange(articleUri, null);
 		return articleUri;
 	}
 
 	// Updates an article in the database.
 	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-		//...
-		getContext().getContentResolver().notifyChange(uri, null);
-		return 0;
+	public int update(Uri uri, ContentValues values, String whereClause, String[] whereArgs) {
+		if(mMatcher.match(uri) != ARTICLE)
+			throw new IllegalArgumentException();
+		whereClause += Articles.COLUMN_ID + " = " + uri.getLastPathSegment();
+		// Perform the update and remember the number of rows affected.
+		int rowsAffected = mHelper.getWritableDatabase().update(Articles.TABLE_NAME, values,
+				whereClause, whereArgs);
+		if(rowsAffected != 0)
+		    getContext().getContentResolver().notifyChange(uri, null);
+		return rowsAffected;
 	}
 	
 	// As there is currently no need to delete articles, this is unimplemented.

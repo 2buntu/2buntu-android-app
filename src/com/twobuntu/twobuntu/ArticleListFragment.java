@@ -120,7 +120,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		// Create the query used by the adapter.
-		return new CursorLoader(getActivity(), ArticleProvider.ARTICLES_URI, 
+		return new CursorLoader(getActivity(), ArticleProvider.CONTENT_URI, 
 				new String[] { Articles.COLUMN_ID, Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME },
 				null, null, Articles.COLUMN_CREATION_DATE);
 	}
@@ -129,7 +129,8 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		mAdapter.swapCursor(data);
-		setListShown(true);
+		if(data.getCount() != 0)
+		    setListShown(true);
 	}
 
 	// When the loader is reset, simply insert a null cursor.

@@ -16,10 +16,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.twobuntu.db.ArticleHelper;
+import com.twobuntu.db.ArticleProvider;
 import com.twobuntu.db.Articles;
 import com.twobuntu.twobuntu.R;
 
@@ -45,7 +47,8 @@ public class UpdateService extends IntentService {
 		        .setContentTitle(getResources().getString(R.string.app_name))
 		        .setContentText(article.getString("title"))
                 .setSmallIcon(R.drawable.ic_stat_article).getNotification();
-		((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).notify(0, notification);
+		((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).notify(article.getInt("id"),
+				notification);
 	}
 	
 	// TODO: there is a logic error with the code below. If more than twenty
@@ -64,15 +67,16 @@ public class UpdateService extends IntentService {
 					null, null, null, null);
 			// If the article does NOT exist, add it and display a notification.
 			if(cursor.getCount() == 0) {
-				mDatabase.getWritableDatabase().insert(Articles.TABLE_NAME, null,
+				getContentResolver().insert(ArticleProvider.CONTENT_URI,
 						Articles.convertToContentValues(article));
 				displayNotification(article);
 			}
 			// Otherwise, update the existing article in-place.
-			else
-				mDatabase.getWritableDatabase().update(Articles.TABLE_NAME,
-						Articles.convertToContentValues(article),
-						Articles.COLUMN_ID + " = " + article.getInt("id"), null);
+			else {
+				Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI,
+						"/" + article.getInt("id"));
+				getContentResolver().update(uri, Articles.convertToContentValues(article), null, null);
+			}
 		}
 		// Store the time of last update for the next poll.
 		mPreferences.edit().putLong(LAST_UPDATE, max).commit();

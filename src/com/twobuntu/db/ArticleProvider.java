@@ -10,7 +10,7 @@ import android.net.Uri;
 public class ArticleProvider extends ContentProvider {
 
 	// The authority for the provider.
-	private static final String AUTHORITY = "com.twobuntu.articleprovider";
+	public static final String AUTHORITY = "com.twobuntu.articleprovider";
 	
 	// These URIs are public and intended to be used by other parts of the application.
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/articles");
@@ -39,6 +39,28 @@ public class ArticleProvider extends ContentProvider {
 		return true;
 	}
 	
+	// Provides a means to insert a lot of rows at once.
+	@Override
+	public int bulkInsert(Uri uri, ContentValues[] values) {
+		if(mMatcher.match(uri) != ARTICLES)
+			throw new IllegalArgumentException();
+		// Perform the actual insert operations.
+		int numRows = 0;
+		for(ContentValues articleValues : values) {
+		    mHelper.getWritableDatabase().insert(Articles.TABLE_NAME, null, articleValues);
+		    ++numRows;
+		}
+		// Provide a notification that new rows were inserted.
+		getContext().getContentResolver().notifyChange(uri, null);
+		return numRows;
+	}
+	
+	// As there is currently no need to delete articles, this is unimplemented.
+	@Override
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		return 0;
+	}
+	
 	// Returns the type returned by the specified URI.
 	@Override
 	public String getType(Uri uri) {
@@ -50,6 +72,21 @@ public class ArticleProvider extends ContentProvider {
 		    default:
 		    	throw new IllegalArgumentException();
 		}
+	}
+	
+	// TODO: decide whether we need to keep this method around.
+	
+	// Inserts an article into the database.
+	@Override
+	public Uri insert(Uri uri, ContentValues values) {
+		if(mMatcher.match(uri) != ARTICLES)
+			throw new IllegalArgumentException();
+		// Perform the actual insert operation.
+		long id = mHelper.getWritableDatabase().insert(Articles.TABLE_NAME, null, values);
+		// Generate the URI of the new article.
+		Uri articleUri = Uri.withAppendedPath(CONTENT_LOOKUP_URI, "/" + id);
+		getContext().getContentResolver().notifyChange(uri, null);
+		return articleUri;
 	}
 	
 	// Returns a cursor for the provided query.
@@ -71,19 +108,6 @@ public class ArticleProvider extends ContentProvider {
 		cursor.setNotificationUri(getContext().getContentResolver(), uri);
 		return cursor;
 	}
-	
-	// Inserts an article into the database.
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
-		if(mMatcher.match(uri) != ARTICLES)
-			throw new IllegalArgumentException();
-		// Perform the actual insert operation.
-		long id = mHelper.getWritableDatabase().insert(Articles.TABLE_NAME, null, values);
-		// Generate the URI of the new article.
-		Uri articleUri = Uri.withAppendedPath(CONTENT_LOOKUP_URI, "/" + id);
-		getContext().getContentResolver().notifyChange(articleUri, null);
-		return articleUri;
-	}
 
 	// Updates an article in the database.
 	@Override
@@ -97,11 +121,5 @@ public class ArticleProvider extends ContentProvider {
 		if(rowsAffected != 0)
 		    getContext().getContentResolver().notifyChange(uri, null);
 		return rowsAffected;
-	}
-	
-	// As there is currently no need to delete articles, this is unimplemented.
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		return 0;
 	}
 }

@@ -1,6 +1,7 @@
 package com.twobuntu.service;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -12,6 +13,7 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -59,6 +61,7 @@ public class UpdateService extends IntentService {
 	// Processes the JSON received from the API.
 	private void processArticles(long max, JSONObject response) throws JSONException {
 		JSONArray articles = response.getJSONArray("articles");
+		ArrayList<ContentValues> articlesForInsertion = new ArrayList<ContentValues>();
 		for(int i=0; i<articles.length(); ++i) {
 			// Determine if the article exists in the database already.
 			JSONObject article = articles.getJSONObject(i);
@@ -67,8 +70,7 @@ public class UpdateService extends IntentService {
 					null, null, null, null);
 			// If the article does NOT exist, add it and display a notification.
 			if(cursor.getCount() == 0) {
-				getContentResolver().insert(ArticleProvider.CONTENT_URI,
-						Articles.convertToContentValues(article));
+				articlesForInsertion.add(Articles.convertToContentValues(article));
 				displayNotification(article);
 			}
 			// Otherwise, update the existing article in-place.
@@ -78,6 +80,10 @@ public class UpdateService extends IntentService {
 				getContentResolver().update(uri, Articles.convertToContentValues(article), null, null);
 			}
 		}
+		// If any articles are queued for insertion, then insert them.
+		if(articlesForInsertion.size() != 0)
+			getContentResolver().bulkInsert(ArticleProvider.CONTENT_URI,
+					articlesForInsertion.toArray(new ContentValues[articlesForInsertion.size()]));
 		// Store the time of last update for the next poll.
 		mPreferences.edit().putLong(LAST_UPDATE, max).commit();
 	}
@@ -85,6 +91,7 @@ public class UpdateService extends IntentService {
 	// Process a single intent, which is simply a request to update the database.
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		Log.i("UpdateService", "Performing scheduled update.");
 		// Calculate the appropriate min / max parameters.
 		long min = mPreferences.getLong(LAST_UPDATE, 0) + 1;
 	    long max = System.currentTimeMillis() / 1000;

@@ -24,7 +24,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	
 	// Interface for providing notification of list item selections.
 	public interface ArticleSelectedListener {
-		void onArticleSelected(int id);
+		void onArticleSelected(long id);
 	}
 	
 	// The current listener for article selection events.
@@ -39,7 +39,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	// Begin loading the articles.
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onActivityCreated(savedInstanceState);
 		// This fragment has a menu and should be retained during configuration changes.
 		setHasOptionsMenu(true);
 		setRetainInstance(true);
@@ -88,8 +88,8 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	@Override
 	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
-		//if(mListener != null)
-		//    mListener.onArticleSelected(mAdapter.getItem(position).mId);
+		if(mListener != null)
+		    mListener.onArticleSelected(id);
 	}
 
 	// Save the currently selected article.
@@ -116,7 +116,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 		mCurrentArticle = position;
 	}
 
-	// TODO: document this method.
+	// Creates the loader.
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		// Create the query used by the adapter.
@@ -125,14 +125,14 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 				null, null, Articles.COLUMN_CREATION_DATE);
 	}
 
-	// TODO ...and this one.
+	// Called when the loader finishes.
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		mAdapter.swapCursor(data);
 		setListShown(true);
 	}
 
-	// TODO ...and this one.
+	// When the loader is reset, simply insert a null cursor.
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mAdapter.swapCursor(null);

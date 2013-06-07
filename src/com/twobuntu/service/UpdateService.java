@@ -19,8 +19,8 @@ import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.twobuntu.db.Articles;
 import com.twobuntu.db.ArticleHelper;
+import com.twobuntu.db.Articles;
 import com.twobuntu.twobuntu.R;
 
 // Periodically updates the internal database to reflect the current articles on the site.
@@ -83,7 +83,7 @@ public class UpdateService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		// Calculate the appropriate min / max parameters.
 		long min = mPreferences.getLong(LAST_UPDATE, 0) + 1;
-	    long max = System.currentTimeMillis();
+	    long max = System.currentTimeMillis() / 1000;
 		try {
 			// Read the raw JSON data from the server and parse it.
 			String json = IOUtils.toString(new URL("http://" + DOMAIN_NAME + "/api/articles?min=" + min +
@@ -92,20 +92,22 @@ public class UpdateService extends IntentService {
 		} catch (Exception e) {
 			Log.e("UpdateService", e.toString());
 		} finally {
-			scheduleUpdate(UpdateService.this);
+			// Schedule the next update.
+			Intent updateIntent = new Intent(this, UpdateService.class);
+			((AlarmManager)getSystemService(Context.ALARM_SERVICE)).set(AlarmManager.RTC,
+					UPDATE_INTERVAL, PendingIntent.getBroadcast(this, 0, updateIntent, 0));
 		}
 	}
 	
 	public UpdateService() {
 		super("UpdateService");
-		mDatabase = new ArticleHelper(this);
-		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 	
-	// Schedules an update for the future.
-	public static void scheduleUpdate(Context context) {
-		Intent intent = new Intent(context, UpdateService.class);
-		((AlarmManager)context.getSystemService(Context.ALARM_SERVICE)).set(AlarmManager.RTC,
-				UPDATE_INTERVAL, PendingIntent.getBroadcast(context, 0, intent, 0));
+	// Initialize the article database and shared preferences.
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		mDatabase = new ArticleHelper(this);
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 }

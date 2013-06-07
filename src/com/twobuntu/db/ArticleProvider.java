@@ -72,18 +72,18 @@ public class ArticleProvider extends ContentProvider {
 	// TODO: these are unimplemented.
 	
 	@Override
-	public int delete(Uri arg0, String arg1, String[] arg2) {
-		return 0;
-	}
-
-	@Override
-	public Uri insert(Uri arg0, ContentValues arg1) {
+	public Uri insert(Uri uri, ContentValues values) {
 		return null;
 	}
 
 	@Override
-	public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		return 0;
 	}
-
+	
+	// As there is currently no need to delete articles, this is unimplemented.
+	@Override
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		return 0;
+	}
 }

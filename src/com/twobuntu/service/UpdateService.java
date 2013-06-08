@@ -98,7 +98,7 @@ public class UpdateService extends IntentService {
 		try {
 			// Read the raw JSON data from the server and parse it.
 			String json = IOUtils.toString(new URL("http://" + DOMAIN_NAME + "/api/articles?min=" + min +
-					"&max=" + max + "&sort=oldest").openStream(), "utf-8");
+					"&max=" + max + "&sort=newest").openStream(), "utf-8");
 			processArticles(max, new JSONObject(json));
 		} catch (Exception e) {
 			Log.e("UpdateService", e.toString());

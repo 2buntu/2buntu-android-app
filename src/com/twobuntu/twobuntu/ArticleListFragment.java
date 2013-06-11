@@ -122,7 +122,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 		// Create the query used by the adapter.
 		return new CursorLoader(getActivity(), ArticleProvider.CONTENT_URI, 
 				new String[] { Articles.COLUMN_ID, Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME },
-				null, null, Articles.COLUMN_CREATION_DATE);
+				null, null, Articles.COLUMN_CREATION_DATE + " DESC");
 	}
 
 	// Called when the loader finishes.

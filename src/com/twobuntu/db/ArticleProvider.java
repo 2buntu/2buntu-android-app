@@ -10,7 +10,7 @@ import android.net.Uri;
 public class ArticleProvider extends ContentProvider {
 
 	// The authority for the provider.
-	public static final String AUTHORITY = "com.twobuntu.articleprovider";
+	private static final String AUTHORITY = "com.twobuntu.articleprovider";
 	
 	// These URIs are public and intended to be used by other parts of the application.
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/articles");
@@ -27,7 +27,7 @@ public class ArticleProvider extends ContentProvider {
 	static {
 		mMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		mMatcher.addURI(AUTHORITY, "articles", ARTICLES);
-		mMatcher.addURI(AUTHORITY, "article/#", ARTICLE);
+		mMatcher.addURI(AUTHORITY, "articles/#", ARTICLE);
 	}
 	
 	// Provides access to the database.
@@ -55,13 +55,13 @@ public class ArticleProvider extends ContentProvider {
 		return numRows;
 	}
 	
-	// As there is currently no need to delete articles, this is unimplemented.
+	// As there is currently no need to delete articles, this method is unimplemented.
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		return 0;
+		throw new UnsupportedOperationException();
 	}
 	
-	// Returns the type returned by the specified URI.
+	// Returns the type indicated by the specified URI.
 	@Override
 	public String getType(Uri uri) {
 		switch(mMatcher.match(uri)) {
@@ -74,19 +74,10 @@ public class ArticleProvider extends ContentProvider {
 		}
 	}
 	
-	// TODO: decide whether we need to keep this method around.
-	
-	// Inserts an article into the database.
+	// As this content provider only supports bulk insertions, this method is unimplemented.
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		if(mMatcher.match(uri) != ARTICLES)
-			throw new IllegalArgumentException();
-		// Perform the actual insert operation.
-		long id = mHelper.getWritableDatabase().insert(Articles.TABLE_NAME, null, values);
-		// Generate the URI of the new article.
-		Uri articleUri = Uri.withAppendedPath(CONTENT_LOOKUP_URI, "/" + id);
-		getContext().getContentResolver().notifyChange(uri, null);
-		return articleUri;
+		throw new UnsupportedOperationException();
 	}
 	
 	// Returns a cursor for the provided query.
@@ -97,7 +88,7 @@ public class ArticleProvider extends ContentProvider {
 		    case ARTICLES:
 			    break;
 		    case ARTICLE:
-			    selection += Articles.COLUMN_ID + " = " + uri.getLastPathSegment();
+			    selection = Articles.COLUMN_ID + " = " + uri.getLastPathSegment();
 			    break;
 			default:
 				throw new IllegalArgumentException();

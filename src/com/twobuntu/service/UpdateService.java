@@ -75,8 +75,7 @@ public class UpdateService extends IntentService {
 			}
 			// Otherwise, update the existing article in-place.
 			else {
-				Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI,
-						"/" + article.getInt("id"));
+				Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI, article.getInt("id"));
 				getContentResolver().update(uri, Articles.convertToContentValues(article), null, null);
 			}
 		}
@@ -101,9 +100,10 @@ public class UpdateService extends IntentService {
 					"&max=" + max + "&sort=newest").openStream(), "utf-8");
 			processArticles(max, new JSONObject(json));
 		} catch (Exception e) {
-			Log.e("UpdateService", e.toString());
+			Log.e("UpdateService", "Error description: " + e.toString());
 		} finally {
 			// Schedule the next update.
+			Log.i("UpdateService", "Scheduling next update.");
 			Intent updateIntent = new Intent(this, UpdateService.class);
 			((AlarmManager)getSystemService(Context.ALARM_SERVICE)).set(AlarmManager.RTC,
 					UPDATE_INTERVAL, PendingIntent.getBroadcast(this, 0, updateIntent, 0));

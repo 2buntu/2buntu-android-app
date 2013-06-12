@@ -75,7 +75,7 @@ public class UpdateService extends IntentService {
 			}
 			// Otherwise, update the existing article in-place.
 			else {
-				Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI, article.getInt("id"));
+				Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI, String.valueOf(article.getInt("id")));
 				getContentResolver().update(uri, Articles.convertToContentValues(article), null, null);
 			}
 		}

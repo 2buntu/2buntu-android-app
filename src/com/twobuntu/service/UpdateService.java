@@ -106,7 +106,7 @@ public class UpdateService extends IntentService {
 			Log.i("UpdateService", "Scheduling next update.");
 			Intent updateIntent = new Intent(this, UpdateService.class);
 			((AlarmManager)getSystemService(Context.ALARM_SERVICE)).set(AlarmManager.RTC,
-					UPDATE_INTERVAL, PendingIntent.getBroadcast(this, 0, updateIntent, 0));
+					System.currentTimeMillis() + UPDATE_INTERVAL, PendingIntent.getService(this, 0, updateIntent, 0));
 		}
 	}
 	

@@ -105,7 +105,7 @@ public class ArticleProvider extends ContentProvider {
 	public int update(Uri uri, ContentValues values, String whereClause, String[] whereArgs) {
 		if(mMatcher.match(uri) != ARTICLE)
 			throw new IllegalArgumentException();
-		whereClause += Articles.COLUMN_ID + " = " + uri.getLastPathSegment();
+		whereClause = Articles.COLUMN_ID + " = " + uri.getLastPathSegment();
 		// Perform the update and remember the number of rows affected.
 		int rowsAffected = mHelper.getWritableDatabase().update(Articles.TABLE_NAME, values,
 				whereClause, whereArgs);

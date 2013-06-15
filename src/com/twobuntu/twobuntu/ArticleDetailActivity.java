@@ -19,7 +19,7 @@ public class ArticleDetailActivity extends Activity {
 		if (savedInstanceState == null) {
 			Bundle arguments = new Bundle();
 			arguments.putLong(ArticleDetailFragment.ARG_ARTICLE_ID,
-					getIntent().getLongExtra(ArticleDetailFragment.ARG_ARTICLE_ID, 0));
+					getIntent().getLongExtra(ArticleDetailFragment.ARG_ARTICLE_ID, 0L));
 			ArticleDetailFragment fragment = new ArticleDetailFragment();
 			fragment.setArguments(arguments);
 			getFragmentManager().beginTransaction()

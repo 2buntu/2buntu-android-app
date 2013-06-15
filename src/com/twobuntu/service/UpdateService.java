@@ -25,6 +25,7 @@ import android.util.Log;
 import com.twobuntu.db.ArticleHelper;
 import com.twobuntu.db.ArticleProvider;
 import com.twobuntu.db.Articles;
+import com.twobuntu.twobuntu.ArticleListActivity;
 import com.twobuntu.twobuntu.R;
 
 // Periodically updates the internal database to reflect the current articles on the site.
@@ -45,7 +46,9 @@ public class UpdateService extends IntentService {
 	// Adds a notification indicating that a new article was added.
 	@SuppressWarnings("deprecation")
 	private void displayNotification(JSONObject article) throws JSONException {
+	    // Create the notification.
 		Notification notification = new Notification.Builder(this)
+		        .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, ArticleListActivity.class), 0))
 		        .setContentTitle(getResources().getString(R.string.app_name))
 		        .setContentText(article.getString("title"))
                 .setSmallIcon(R.drawable.ic_stat_article).getNotification();

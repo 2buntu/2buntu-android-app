@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">2buntu</string>
-    <string name="title_article_detail">Article Detail</string>
     <string name="description_gravatar">User Gravatar</string>
     <string name="action_refresh">Refresh</string>
 

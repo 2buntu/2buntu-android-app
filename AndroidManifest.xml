@@ -23,8 +23,7 @@
         
         <!-- Displays a list of articles. -->
         <activity
-            android:name="com.twobuntu.twobuntu.ArticleListActivity"
-            android:label="@string/app_name" >
+            android:name="com.twobuntu.twobuntu.ArticleListActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -34,7 +33,6 @@
         <!-- Displays an individual article. -->
         <activity
             android:name="com.twobuntu.twobuntu.ArticleDetailActivity"
-            android:label="@string/title_article_detail"
             android:parentActivityName=".ArticleListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

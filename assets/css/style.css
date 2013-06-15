@@ -1,0 +1,45 @@
+/* Declare the Ubuntu Light font used for WebView. */
+@font-face {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 400;
+    src: url(../fonts/Ubuntu.ttf);
+}
+
+/* Set the font page-wide. */
+body {
+    font-family: Ubuntu;
+}
+
+/* Ensure images are not wider than the page. */
+img {
+    max-width: 100%;
+}
+
+/* Style the header that appears at the top of each article. */
+header {
+    border-bottom: 1px solid #e1662f;
+    padding-bottom: 8px;
+}
+
+header h2,
+header p {
+    font-weight: bold;
+    margin: 4px;
+}
+
+header h2 {
+    color: #e1662f;
+    font-size: 18pt;
+}
+
+/* Make sure alerts are styled properly. */
+.alert {
+    background-color: #eee;
+    padding: 8px;
+}
+
+.alert img {
+    float: left;
+    margin: 0 4px 4px 0;
+}

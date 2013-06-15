@@ -6,6 +6,7 @@ import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +41,8 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		// Set the Ubuntu font.
+		//getListView().setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Ubuntu Light.ttf"));
 		// This fragment has a menu and should be retained during configuration changes.
 		setHasOptionsMenu(true);
 		setRetainInstance(true);

@@ -1,13 +1,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
+    <style name="AppTheme" parent="@android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
+		<item name="android:listSelector">@drawable/selection</item>
+		<item name="android:selectableItemBackground">@drawable/selection</item>
     </style>
     
     <!-- Use Ubuntu colors for window title. -->
-    <style name="WindowTitleBackground">
-        <item name="android:background">@color/orange</item>
+	
+    <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@color/Orange</item>
+		<item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleText</item>
     </style>
+	
+	<style name="AppTheme.ActionBar.TitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+		<item name="android:textColor">@color/White</item>
+	</style>
 
 </resources>

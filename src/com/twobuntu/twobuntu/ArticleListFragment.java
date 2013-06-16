@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.twobuntu.db.ArticleProvider;
 import com.twobuntu.db.Articles;
@@ -37,19 +39,32 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	// The adapter used for retrieving article information.
 	private SimpleCursorAdapter mAdapter;
 	
+	// The custom typeface we are using for displaying the article list.
+	private Typeface mTypeface;
+	
 	// Begin loading the articles.
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		// Set the Ubuntu font.
-		//getListView().setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Ubuntu Light.ttf"));
+		mTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Ubuntu.ttf");
 		// This fragment has a menu and should be retained during configuration changes.
 		setHasOptionsMenu(true);
 		setRetainInstance(true);
 		// Initialize the cursor adapter.
 		mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
 				new String[] { Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME },
-				new int[] { android.R.id.text1, android.R.id.text2 }, 0);
+				new int[] { android.R.id.text1, android.R.id.text2 }, 0) {
+			
+			// We need to do this in order to customize the typeface.
+		    @Override
+		    public View getView(int position, View convertView, ViewGroup parent) {
+		        convertView = super.getView(position, convertView, parent);
+		        ((TextView)convertView.findViewById(android.R.id.text1)).setTypeface(mTypeface);
+		        ((TextView)convertView.findViewById(android.R.id.text2)).setTypeface(mTypeface);
+		        return convertView;
+		    }
+		};
 		// Set the adapter and begin loading the data.
 		setListAdapter(mAdapter);
 		setListShown(false);

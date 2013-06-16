@@ -9,7 +9,7 @@ public class ArticleHelper extends SQLiteOpenHelper {
 
 	// The name and version of the database.
 	private static final String DATABASE_NAME = "twobuntu";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	
 	public ArticleHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -26,12 +26,15 @@ public class ArticleHelper extends SQLiteOpenHelper {
 				Articles.COLUMN_BODY + " TEXT," +
 				Articles.COLUMN_TAGS + " VARCHAR(100)," +
 				Articles.COLUMN_CREATION_DATE + " INTEGER," +
-				Articles.COLUMN_LAST_MODIFICATION_DATE + " INTEGER);");
+				Articles.COLUMN_LAST_MODIFICATION_DATE + " INTEGER," +
+				Articles.COLUMN_URL + " VARCHAR(200));");
 	}
 
 	// Updates the tables in the database (for example, after upgrading the app).
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// We are on the first version, so do nothing.
+		if(oldVersion < 2)
+			db.execSQL("ALTER TABLE " + Articles.TABLE_NAME + " ADD COLUMN " +
+		            Articles.COLUMN_URL + " VARCHAR(200) DEFAULT \"http://2buntu.com\";");
 	}
 }

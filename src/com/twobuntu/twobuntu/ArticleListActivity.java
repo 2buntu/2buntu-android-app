@@ -19,8 +19,11 @@ public class ArticleListActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_article_list);
-		// Force the update service to perform an immediate update.
+		// Force the update service to perform an immediate update, but do
+		// not display any notifications for new articles.
+		// TODO: this really should display a notification - just not on first run.
 		Intent updateIntent = new Intent(this, UpdateService.class);
+		updateIntent.putExtra(UpdateService.ARG_NOTIFICATIONS, false);
 	    startService(updateIntent);
 		// Attempt to find the article content container - which will only
 		// be present on devices with larger screens.

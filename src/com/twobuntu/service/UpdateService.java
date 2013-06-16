@@ -31,6 +31,10 @@ import com.twobuntu.twobuntu.R;
 // Periodically updates the internal database to reflect the current articles on the site.
 public class UpdateService extends IntentService {
 	
+	// Extra data passed through the intent.
+	public static String ARG_NOTIFICATIONS = "notifications";
+	
+	// Internal declarations.
 	private static final long UPDATE_INTERVAL = AlarmManager.INTERVAL_HALF_HOUR;
 	private static final String LAST_UPDATE = "last_update";
 	private static final String DOMAIN_NAME = "2buntu.com";
@@ -62,7 +66,7 @@ public class UpdateService extends IntentService {
 	// obtained in one of the articles. This should eventually be fixed.
 	
 	// Processes the JSON received from the API.
-	private void processArticles(long max, JSONObject response) throws JSONException {
+	private void processArticles(boolean notifications, long max, JSONObject response) throws JSONException {
 		JSONArray articles = response.getJSONArray("articles");
 		ArrayList<ContentValues> articlesForInsertion = new ArrayList<ContentValues>();
 		for(int i=0; i<articles.length(); ++i) {
@@ -73,11 +77,14 @@ public class UpdateService extends IntentService {
 					null, null, null, null);
 			// If the article does NOT exist, add it and display a notification.
 			if(cursor.getCount() == 0) {
+				Log.i("UpdateService", "New article '" + article.getString("title") + "'.");
 				articlesForInsertion.add(Articles.convertToContentValues(article));
-				displayNotification(article);
+				if(notifications)
+				    displayNotification(article);
 			}
 			// Otherwise, update the existing article in-place.
 			else {
+				Log.i("UpdateService", "Updating existing article " + article.getInt("id") + ".");
 				Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI, String.valueOf(article.getInt("id")));
 				getContentResolver().update(uri, Articles.convertToContentValues(article), null, null);
 			}
@@ -93,15 +100,18 @@ public class UpdateService extends IntentService {
 	// Process a single intent, which is simply a request to update the database.
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.i("UpdateService", "Performing scheduled update.");
+		// Determine if notifications should be shown.
+		boolean notifications = intent.getBooleanExtra(ARG_NOTIFICATIONS, true);
 		// Calculate the appropriate min / max parameters.
 		long min = mPreferences.getLong(LAST_UPDATE, 0) + 1;
 	    long max = System.currentTimeMillis() / 1000;
+	    // Log the attempt.
+		Log.i("UpdateService", "Performing scheduled update for range " + min + " - " + max + ".");
 		try {
 			// Read the raw JSON data from the server and parse it.
 			String json = IOUtils.toString(new URL("http://" + DOMAIN_NAME + "/api/articles?min=" + min +
 					"&max=" + max + "&sort=newest").openStream(), "utf-8");
-			processArticles(max, new JSONObject(json));
+			processArticles(notifications, max, new JSONObject(json));
 		} catch (Exception e) {
 			Log.e("UpdateService", "Error description: " + e.toString());
 		} finally {

@@ -49,7 +49,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 		// Set the Ubuntu font.
 		mTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Ubuntu.ttf");
 		// This fragment has a menu and should be retained during configuration changes.
-		setHasOptionsMenu(true);
+		//setHasOptionsMenu(true);
 		setRetainInstance(true);
 		// Initialize the cursor adapter.
 		mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,

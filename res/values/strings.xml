@@ -4,5 +4,7 @@
     <string name="app_name">2buntu</string>
     <string name="description_gravatar">User Gravatar</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_share">Share</string>
+    <string name="intent_share_article">Share article via</string>
 
 </resources>

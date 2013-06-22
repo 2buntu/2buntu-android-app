@@ -52,6 +52,7 @@ public class UpdateService extends IntentService {
 	private void displayNotification(JSONObject article) throws JSONException {
 	    // Create the notification.
 		Notification notification = new Notification.Builder(this)
+				.setAutoCancel(true)
 		        .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, ArticleListActivity.class), 0))
 		        .setContentTitle(getResources().getString(R.string.app_name))
 		        .setContentText(article.getString("title"))
@@ -66,9 +67,11 @@ public class UpdateService extends IntentService {
 	// obtained in one of the articles. This should eventually be fixed.
 	
 	// Processes the JSON received from the API.
-	private void processArticles(boolean notifications, long max, JSONObject response) throws JSONException {
+	private void processArticles(boolean notifications, JSONObject response) throws JSONException {
 		JSONArray articles = response.getJSONArray("articles");
 		ArrayList<ContentValues> articlesForInsertion = new ArrayList<ContentValues>();
+		// Used for storing the last modification time.
+		long lastUpdate = 0;
 		for(int i=0; i<articles.length(); ++i) {
 			// Determine if the article exists in the database already.
 			JSONObject article = articles.getJSONObject(i);
@@ -88,13 +91,16 @@ public class UpdateService extends IntentService {
 				Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI, String.valueOf(article.getInt("id")));
 				getContentResolver().update(uri, Articles.convertToContentValues(article), null, null);
 			}
+			// Store the most recent update.
+			lastUpdate = Math.max(lastUpdate, article.getInt("last_modification_date"));
 		}
 		// If any articles are queued for insertion, then insert them.
 		if(articlesForInsertion.size() != 0)
 			getContentResolver().bulkInsert(ArticleProvider.CONTENT_URI,
 					articlesForInsertion.toArray(new ContentValues[articlesForInsertion.size()]));
 		// Store the time of last update for the next poll.
-		mPreferences.edit().putLong(LAST_UPDATE, max).commit();
+		if(lastUpdate != 0)
+		    mPreferences.edit().putLong(LAST_UPDATE, lastUpdate).commit();
 	}
 	
 	// Process a single intent, which is simply a request to update the database.
@@ -111,7 +117,7 @@ public class UpdateService extends IntentService {
 			// Read the raw JSON data from the server and parse it.
 			String json = IOUtils.toString(new URL("http://" + DOMAIN_NAME + "/api/articles?min=" + min +
 					"&max=" + max + "&sort=newest").openStream(), "utf-8");
-			processArticles(notifications, max, new JSONObject(json));
+			processArticles(notifications, new JSONObject(json));
 		} catch (Exception e) {
 			Log.e("UpdateService", "Error description: " + e.toString());
 		} finally {

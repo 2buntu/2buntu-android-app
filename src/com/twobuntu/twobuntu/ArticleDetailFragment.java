@@ -22,29 +22,24 @@ public class ArticleDetailFragment extends Fragment {
 	// This is the ID of the article being displayed.
 	public static final String ARG_ARTICLE_ID = "article_id";
 	
-	// This holds the URL of the current article.
+	// This holds the ID and URL of the current article.
+	private long mID;
 	private String mURL;
 	
 	// Generates the HTML for the entire page given the title and body to display.
-	private String generateHTML(String title, String author, String body) {
-	    return "<html>" +
+	private String generateHTML(String title, String author, String body, String url) {
+		return "<html>" +
 	           "<head>" +
 	           "  <link rel='stylesheet' href='css/style.css'>" +
 	           "</head>" +
 	           "<body>" +
-	           "<header>" +
-	             "<h2>" + title + "</h2>" +
-	             "<p>by " + author + "</p>" +
-	           "</header>" +
-	           body +
+	             "<header>" +
+	               "<h2>" + title + "</h2>" +
+	               "<p>by " + author + "</p>" +
+	             "</header>" +
+	             body +
 	           "</body>" +
 	           "</html>";
-	}
-	
-	// Begins loading the article and preparing it for display.
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -64,8 +59,10 @@ public class ArticleDetailFragment extends Fragment {
 		    // Set the title and body.
 			WebView webView = (WebView)rootView.findViewById(R.id.article_content);
 			webView.loadDataWithBaseURL("file:///android_asset/", generateHTML(cursor.getString(0),
-			        cursor.getString(1), cursor.getString(2)), "text/html", "utf-8", null);
-			// ...and remember the URL.
+			        cursor.getString(1), cursor.getString(2), cursor.getString(3)),
+			        "text/html", "utf-8", null);
+			// ...and remember the ID + URL.
+			mID  = getArguments().getLong(ARG_ARTICLE_ID);
 			mURL = cursor.getString(3);
 		}
 		return rootView;
@@ -81,13 +78,22 @@ public class ArticleDetailFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		    case R.id.menu_comments:
+		    {
+		    	Intent intent = new Intent(getActivity(), ArticleCommentsActivity.class);
+		    	intent.putExtra(ArticleCommentsFragment.ARG_ARTICLE_ID, mID);
+		    	startActivity(intent);
+		    	return true;
+		    }
 		    case R.id.menu_share:
-		    	Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+		    {
+		    	Intent intent = new Intent(Intent.ACTION_SEND);
 		    	intent.setType("text/plain");
 		    	intent.putExtra(android.content.Intent.EXTRA_TEXT, mURL);
 		    	getActivity().startActivity(Intent.createChooser(intent,
 		    			getActivity().getResources().getText(R.string.intent_share_article)));
 		    	return true;
+		    }
 		    default:
 		    	return false;
 		}

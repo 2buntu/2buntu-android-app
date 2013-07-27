@@ -33,6 +33,11 @@ header h2 {
     font-size: 18pt;
 }
 
+/* Disqus comment box needs a margin near the top. */
+#disqus_thread {
+    margin-top: 16px;
+}
+
 /* Make sure alerts are styled properly. */
 .alert {
     background-color: #eee;

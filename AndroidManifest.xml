@@ -2,13 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twobuntu.twobuntu"
     android:installLocation="auto"
-    android:versionCode="6"
-    android:versionName="1.0.5" >
+    android:versionCode="7"
+    android:versionName="1.1.0" >
 
     <!-- This app will only run on Android 4.x+. -->
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
     
     <!-- We require permission to retrieve files from the Internet
          and to be notified when the system boots.  -->
@@ -38,6 +38,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ArticleListActivity" />
+        </activity>
+        
+        <!-- Displays comments for an article. -->
+        <activity
+            android:name="com.twobuntu.twobuntu.ArticleCommentsActivity"
+            android:parentActivityName=".ArticleDetailActivity" >
+            <meta-data 
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ArticleDetailActivity" />
         </activity>
         
         <!-- Periodically updates the articles in the database. -->

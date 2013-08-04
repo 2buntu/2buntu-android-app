@@ -52,7 +52,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 		//setHasOptionsMenu(true);
 		setRetainInstance(true);
 		// Initialize the cursor adapter.
-		mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null,
+		mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_text_with_icon, null,
 				new String[] { Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME },
 				new int[] { android.R.id.text1, android.R.id.text2 }, 0) {
 			

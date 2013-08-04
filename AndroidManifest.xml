@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twobuntu.twobuntu"
     android:installLocation="auto"
-    android:versionCode="7"
-    android:versionName="1.1.0" >
+    android:versionCode="8"
+    android:versionName="1.1.1" >
 
     <!-- This app will only run on Android 4.x+. -->
     <uses-sdk

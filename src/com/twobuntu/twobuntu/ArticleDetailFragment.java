@@ -1,5 +1,9 @@
 package com.twobuntu.twobuntu;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,16 +30,32 @@ public class ArticleDetailFragment extends Fragment {
 	private long mID;
 	private String mURL;
 	
+	// Columns to retrieve for the article.
+	private static final String[] mColumns = new String[] {
+		Articles.COLUMN_TITLE,
+		Articles.COLUMN_AUTHOR_EMAIL_HASH,
+		Articles.COLUMN_CREATION_DATE,
+		Articles.COLUMN_AUTHOR_NAME,
+		Articles.COLUMN_BODY,
+		Articles.COLUMN_URL
+	};
+	
 	// Generates the HTML for the entire page given the title and body to display.
-	private String generateHTML(String title, String author, String body, String url) {
+	@SuppressLint("SimpleDateFormat")
+	private String generateHTML(String title, String email_hash, long creation_date, String author, String body) {
+		String date = new SimpleDateFormat("MMMM dd, yyyy").format(new Date(creation_date * 1000));
 		return "<html>" +
 	           "<head>" +
 	           "  <link rel='stylesheet' href='css/style.css'>" +
 	           "</head>" +
 	           "<body>" +
 	             "<header>" +
-	               "<h2>" + title + "</h2>" +
-	               "<p>by " + author + "</p>" +
+	               "<div>" +
+	                 "<img src='http://gravatar.com/avatar/" + email_hash + "?s=64&d=identicon'>" +
+	                 "<h2>" + title + "</h2>" +
+	               "</div>" +
+	               "<table><tr><td>by " + author + "</td>" +
+	               "<td>" + date + "</td></tr></table>" +
 	             "</header>" +
 	             body +
 	           "</body>" +
@@ -52,14 +72,12 @@ public class ArticleDetailFragment extends Fragment {
 		if(getArguments().containsKey(ARG_ARTICLE_ID)) {
 		    Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI,
 		    		String.valueOf(getArguments().getLong(ARG_ARTICLE_ID)));
-		    Cursor cursor = getActivity().getContentResolver().query(uri,
-		    		new String[] { Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME,
-		    		Articles.COLUMN_BODY, Articles.COLUMN_URL }, null, null, null);
+		    Cursor cursor = getActivity().getContentResolver().query(uri, mColumns, null, null, null);
 		    cursor.moveToFirst();
 		    // Set the title and body.
 			WebView webView = (WebView)rootView.findViewById(R.id.article_content);
 			webView.loadDataWithBaseURL("file:///android_asset/", generateHTML(cursor.getString(0),
-			        cursor.getString(1), cursor.getString(2), cursor.getString(3)),
+			        cursor.getString(1), cursor.getLong(2), cursor.getString(3), cursor.getString(4)),
 			        "text/html", "utf-8", null);
 			// ...and remember the ID + URL.
 			mID  = getArguments().getLong(ARG_ARTICLE_ID);

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <ListPreference
+        android:key="refresh_interval"
+        android:title="@string/title_refresh_interval"
+        android:summary="@string/summary_refresh_interval"
+        android:dialogTitle="@string/title_refresh_interval"
+        android:entries="@array/intervals"
+        android:entryValues="@array/interval_values"
+        android:defaultValue="1800000" />
+
+</PreferenceScreen>

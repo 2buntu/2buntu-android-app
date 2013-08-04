@@ -38,6 +38,16 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ArticleListActivity" />
+            <!--
+            This is not functional yet.
+            <intent-filter>
+                <data android:scheme="http"
+                      android:host="2buntu.com" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            -->
         </activity>
         
         <!-- Displays comments for an article. -->
@@ -47,6 +57,13 @@
             <meta-data 
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ArticleDetailActivity" />
+        </activity>
+        
+        <!-- Displays configurable settings. -->
+        <activity
+            android:name="com.twobuntu.twobuntu.SettingsActivity"
+            android:label="@string/activity_settings"
+            android:theme="@style/SettingsTheme" >
         </activity>
         
         <!-- Periodically updates the articles in the database. -->

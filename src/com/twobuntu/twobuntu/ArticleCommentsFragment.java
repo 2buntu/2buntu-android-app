@@ -12,7 +12,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.twobuntu.db.ArticleProvider;
-import com.twobuntu.db.Articles;
+import com.twobuntu.db.Article;
 
 // Displays comments for an article.
 public class ArticleCommentsFragment extends Fragment {
@@ -56,7 +56,7 @@ public class ArticleCommentsFragment extends Fragment {
 			Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI,
 		    		String.valueOf(getArguments().getLong(ARG_ARTICLE_ID)));
 			Cursor cursor = getActivity().getContentResolver().query(uri,
-		    		new String[] { Articles.COLUMN_TITLE, Articles.COLUMN_URL },
+		    		new String[] { Article.COLUMN_TITLE, Article.COLUMN_URL },
 		    		null, null, null);
 			cursor.moveToFirst();
 			// Display the comments.

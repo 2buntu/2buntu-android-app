@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.twobuntu.db.ArticleProvider;
-import com.twobuntu.db.Articles;
+import com.twobuntu.db.Article;
 
 // Displays details about the particular article.
 public class ArticleDetailFragment extends Fragment {
@@ -32,12 +32,12 @@ public class ArticleDetailFragment extends Fragment {
 	
 	// Columns to retrieve for the article.
 	private static final String[] mColumns = new String[] {
-		Articles.COLUMN_TITLE,
-		Articles.COLUMN_AUTHOR_EMAIL_HASH,
-		Articles.COLUMN_CREATION_DATE,
-		Articles.COLUMN_AUTHOR_NAME,
-		Articles.COLUMN_BODY,
-		Articles.COLUMN_URL
+		Article.COLUMN_TITLE,
+		Article.COLUMN_AUTHOR_EMAIL_HASH,
+		Article.COLUMN_CREATION_DATE,
+		Article.COLUMN_AUTHOR_NAME,
+		Article.COLUMN_BODY,
+		Article.COLUMN_URL
 	};
 	
 	// Generates the HTML for the entire page given the title and body to display.

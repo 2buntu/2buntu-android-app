@@ -18,5 +18,14 @@
 	<style name="AppTheme.ActionBar.TitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
 		<item name="android:textColor">@color/White</item>
 	</style>
+	
+	<!-- Settings activity theme. -->
+	<style name="SettingsTheme" parent="@android:Theme.Holo">
+	    <item name="android:actionBarStyle">@style/SettingsTheme.ActionBar</item>
+	</style>
+	
+	<style name="SettingsTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:displayOptions">showHome|showTitle</item>
+    </style>
 
 </resources>

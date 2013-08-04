@@ -18,23 +18,27 @@ public class ArticleHelper extends SQLiteOpenHelper {
 	// Creates the tables in the database (only one currently).
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE " + Articles.TABLE_NAME + " (" +
-				Articles.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-				Articles.COLUMN_AUTHOR_NAME + " VARCHAR(100)," +
-				Articles.COLUMN_AUTHOR_EMAIL_HASH + " VARCHAR(32)," +
-				Articles.COLUMN_TITLE + " VARCHAR(200)," +
-				Articles.COLUMN_BODY + " TEXT," +
-				Articles.COLUMN_TAGS + " VARCHAR(100)," +
-				Articles.COLUMN_CREATION_DATE + " INTEGER," +
-				Articles.COLUMN_LAST_MODIFICATION_DATE + " INTEGER," +
-				Articles.COLUMN_URL + " VARCHAR(200));");
+		db.execSQL("CREATE TABLE " + Article.TABLE_NAME + " (" +
+				Article.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+				Article.COLUMN_AUTHOR_NAME + " VARCHAR(100)," +
+				Article.COLUMN_AUTHOR_EMAIL_HASH + " VARCHAR(32)," +
+				Article.COLUMN_TITLE + " VARCHAR(200)," +
+				Article.COLUMN_BODY + " TEXT," +
+				Article.COLUMN_TAGS + " VARCHAR(100)," +
+				Article.COLUMN_CREATION_DATE + " INTEGER," +
+				Article.COLUMN_LAST_MODIFICATION_DATE + " INTEGER," +
+				Article.COLUMN_URL + " VARCHAR(200)," +
+				Article.COLUMN_READ + " BOOLEAN DEFAULT 0);");
 	}
 
 	// Updates the tables in the database (for example, after upgrading the app).
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if(oldVersion < 2)
-			db.execSQL("ALTER TABLE " + Articles.TABLE_NAME + " ADD COLUMN " +
-		            Articles.COLUMN_URL + " VARCHAR(200) DEFAULT \"http://2buntu.com\";");
+			db.execSQL("ALTER TABLE " + Article.TABLE_NAME + " ADD COLUMN " +
+		            Article.COLUMN_URL + " VARCHAR(200) DEFAULT \"http://2buntu.com\";");
+		if(oldVersion < 3)
+			db.execSQL("ALTER TABLE " + Article.TABLE_NAME + " ADD COLUMN " +
+		            Article.COLUMN_READ + " BOOLEAN DEFAULT 0;");
 	}
 }

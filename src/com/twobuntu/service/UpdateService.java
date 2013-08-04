@@ -24,7 +24,7 @@ import android.util.Log;
 
 import com.twobuntu.db.ArticleHelper;
 import com.twobuntu.db.ArticleProvider;
-import com.twobuntu.db.Articles;
+import com.twobuntu.db.Article;
 import com.twobuntu.twobuntu.ArticleListActivity;
 import com.twobuntu.twobuntu.R;
 
@@ -35,7 +35,6 @@ public class UpdateService extends IntentService {
 	public static String ARG_NOTIFICATIONS = "notifications";
 	
 	// Internal declarations.
-	private static final long UPDATE_INTERVAL = AlarmManager.INTERVAL_HALF_HOUR;
 	private static final String LAST_UPDATE = "last_update";
 	private static final String DOMAIN_NAME = "2buntu.com";
 	
@@ -75,13 +74,13 @@ public class UpdateService extends IntentService {
 		for(int i=0; i<articles.length(); ++i) {
 			// Determine if the article exists in the database already.
 			JSONObject article = articles.getJSONObject(i);
-			Cursor cursor = mDatabase.getReadableDatabase().query(Articles.TABLE_NAME, new String[]
-					{ Articles.COLUMN_ID }, Articles.COLUMN_ID + " = " + article.getInt("id"),
+			Cursor cursor = mDatabase.getReadableDatabase().query(Article.TABLE_NAME, new String[]
+					{ Article.COLUMN_ID }, Article.COLUMN_ID + " = " + article.getInt("id"),
 					null, null, null, null);
 			// If the article does NOT exist, add it and display a notification.
 			if(cursor.getCount() == 0) {
 				Log.i("UpdateService", "New article '" + article.getString("title") + "'.");
-				articlesForInsertion.add(Articles.convertToContentValues(article));
+				articlesForInsertion.add(Article.convertToContentValues(article));
 				if(notifications)
 				    displayNotification(article);
 			}
@@ -89,7 +88,7 @@ public class UpdateService extends IntentService {
 			else {
 				Log.i("UpdateService", "Updating existing article " + article.getInt("id") + ".");
 				Uri uri = Uri.withAppendedPath(ArticleProvider.CONTENT_LOOKUP_URI, String.valueOf(article.getInt("id")));
-				getContentResolver().update(uri, Articles.convertToContentValues(article), null, null);
+				getContentResolver().update(uri, Article.convertToContentValues(article), null, null);
 			}
 			// Store the most recent update.
 			lastUpdate = Math.max(lastUpdate, article.getInt("last_modification_date"));
@@ -124,8 +123,9 @@ public class UpdateService extends IntentService {
 			// Schedule the next update.
 			Log.i("UpdateService", "Scheduling next update.");
 			Intent updateIntent = new Intent(this, UpdateService.class);
+			long interval = Long.parseLong(mPreferences.getString("refresh_interval", "1800000"));
 			((AlarmManager)getSystemService(Context.ALARM_SERVICE)).set(AlarmManager.RTC,
-					System.currentTimeMillis() + UPDATE_INTERVAL, PendingIntent.getService(this, 0, updateIntent, 0));
+					System.currentTimeMillis() + interval, PendingIntent.getService(this, 0, updateIntent, 0));
 		}
 	}
 	

@@ -47,7 +47,7 @@ public class ArticleProvider extends ContentProvider {
 		// Perform the actual insert operations.
 		int numRows = 0;
 		for(ContentValues articleValues : values) {
-		    mHelper.getWritableDatabase().insert(Articles.TABLE_NAME, null, articleValues);
+		    mHelper.getWritableDatabase().insert(Article.TABLE_NAME, null, articleValues);
 		    ++numRows;
 		}
 		// Provide a notification that new rows were inserted.
@@ -88,13 +88,13 @@ public class ArticleProvider extends ContentProvider {
 		    case ARTICLES:
 			    break;
 		    case ARTICLE:
-			    selection = Articles.COLUMN_ID + " = " + uri.getLastPathSegment();
+			    selection = Article.COLUMN_ID + " = " + uri.getLastPathSegment();
 			    break;
 			default:
 				throw new IllegalArgumentException();
 		}
 		// Return the cursor to the user.
-		Cursor cursor = mHelper.getReadableDatabase().query(Articles.TABLE_NAME, projection,
+		Cursor cursor = mHelper.getReadableDatabase().query(Article.TABLE_NAME, projection,
 				selection, selectionArgs, null, null, sortOrder);
 		cursor.setNotificationUri(getContext().getContentResolver(), uri);
 		return cursor;
@@ -105,9 +105,9 @@ public class ArticleProvider extends ContentProvider {
 	public int update(Uri uri, ContentValues values, String whereClause, String[] whereArgs) {
 		if(mMatcher.match(uri) != ARTICLE)
 			throw new IllegalArgumentException();
-		whereClause = Articles.COLUMN_ID + " = " + uri.getLastPathSegment();
+		whereClause = Article.COLUMN_ID + " = " + uri.getLastPathSegment();
 		// Perform the update and remember the number of rows affected.
-		int rowsAffected = mHelper.getWritableDatabase().update(Articles.TABLE_NAME, values,
+		int rowsAffected = mHelper.getWritableDatabase().update(Article.TABLE_NAME, values,
 				whereClause, whereArgs);
 		if(rowsAffected != 0)
 		    getContext().getContentResolver().notifyChange(uri, null);

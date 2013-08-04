@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -17,7 +19,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.twobuntu.db.ArticleProvider;
-import com.twobuntu.db.Articles;
+import com.twobuntu.db.Article;
 
 // Displays the list of articles on the home page.
 public class ArticleListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -49,11 +51,11 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 		// Set the Ubuntu font.
 		mTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Ubuntu.ttf");
 		// This fragment has a menu and should be retained during configuration changes.
-		//setHasOptionsMenu(true);
+		setHasOptionsMenu(true);
 		setRetainInstance(true);
 		// Initialize the cursor adapter.
 		mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_text_with_icon, null,
-				new String[] { Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME },
+				new String[] { Article.COLUMN_TITLE, Article.COLUMN_AUTHOR_NAME },
 				new int[] { android.R.id.text1, android.R.id.text2 }, 0) {
 			
 			// We need to do this in order to customize the typeface.
@@ -93,6 +95,18 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_article_list, menu);
+	}
+	
+	// Process an item from the action bar.
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		    case R.id.menu_settings:
+		    	startActivity(new Intent(getActivity(), SettingsActivity.class));
+		    	return true;
+		    default:
+		        return false;
+		}
 	}
 
 	// When the activity is destroyed, remove the callback.
@@ -139,8 +153,8 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		// Create the query used by the adapter.
 		return new CursorLoader(getActivity(), ArticleProvider.CONTENT_URI, 
-				new String[] { Articles.COLUMN_ID, Articles.COLUMN_TITLE, Articles.COLUMN_AUTHOR_NAME },
-				null, null, Articles.COLUMN_CREATION_DATE + " DESC");
+				new String[] { Article.COLUMN_ID, Article.COLUMN_TITLE, Article.COLUMN_AUTHOR_NAME },
+				null, null, Article.COLUMN_CREATION_DATE + " DESC");
 	}
 
 	// Called when the loader finishes.

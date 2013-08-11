@@ -20,11 +20,12 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
 		android:logo="@drawable/ic_logo"
+		android:name=".TwobuntuApplication"
         android:theme="@style/AppTheme" >
         
         <!-- Displays a list of articles. -->
         <activity
-            android:name="com.twobuntu.twobuntu.ArticleListActivity" >
+            android:name=".ArticleListActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -33,7 +34,7 @@
         
         <!-- Displays an individual article. -->
         <activity
-            android:name="com.twobuntu.twobuntu.ArticleDetailActivity"
+            android:name=".ArticleDetailActivity"
             android:parentActivityName=".ArticleListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -52,7 +53,7 @@
         
         <!-- Displays comments for an article. -->
         <activity
-            android:name="com.twobuntu.twobuntu.ArticleCommentsActivity"
+            android:name=".ArticleCommentsActivity"
             android:parentActivityName=".ArticleDetailActivity" >
             <meta-data 
                 android:name="android.support.PARENT_ACTIVITY"
@@ -61,7 +62,7 @@
         
         <!-- Displays configurable settings. -->
         <activity
-            android:name="com.twobuntu.twobuntu.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/activity_settings"
             android:theme="@style/SettingsTheme" >
         </activity>

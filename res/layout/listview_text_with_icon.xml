@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="8dip" >
+    
+    <ImageView
+	    android:id="@id/android:icon"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        android:layout_marginRight="8dip"
+        android:layout_marginTop="4dip" />
     
 	<TextView
         android:id="@+id/android:text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip"
-        android:layout_marginTop="4dip"
+	    android:layout_toRightOf="@id/android:icon"
         android:textAppearance="?android:attr/textAppearanceListItem" />
 	
 	<TextView
         android:id="@+id/android:text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip"
-        android:layout_marginBottom="4dip"
+        android:layout_below="@id/android:text1"
+        android:layout_toRightOf="@id/android:icon"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
-</LinearLayout>
+</RelativeLayout>

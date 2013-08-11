@@ -69,6 +69,7 @@ li, p {
 /* Make sure alerts are styled properly. */
 .alert {
     background-color: #eee;
+    margin: 8px;
     overflow: auto;
     padding: 8px;
 }

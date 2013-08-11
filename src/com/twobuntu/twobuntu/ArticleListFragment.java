@@ -14,18 +14,37 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 
-import com.twobuntu.db.ArticleProvider;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.twobuntu.db.Article;
+import com.twobuntu.db.ArticleProvider;
 
 // Displays the list of articles on the home page.
 public class ArticleListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	// Used for storing the ID of the current article.
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
+	
+	// Columns to retrieve and ...
+	private static final String[] mColumns = new String[] {
+		Article.COLUMN_ID,
+		Article.COLUMN_AUTHOR_EMAIL_HASH,
+		Article.COLUMN_TITLE,
+		Article.COLUMN_AUTHOR_NAME
+	};
+	
+	private static final int[] mViews = new int[] {
+		0,
+		android.R.id.icon,
+		android.R.id.text1,
+		android.R.id.text2
+	};
 	
 	// Interface for providing notification of list item selections.
 	public interface ArticleSelectedListener {
@@ -54,9 +73,8 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 		setHasOptionsMenu(true);
 		setRetainInstance(true);
 		// Initialize the cursor adapter.
-		mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_text_with_icon, null,
-				new String[] { Article.COLUMN_TITLE, Article.COLUMN_AUTHOR_NAME },
-				new int[] { android.R.id.text1, android.R.id.text2 }, 0) {
+		mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_text_with_icon,
+				null, mColumns, mViews, 0) {
 			
 			// We need to do this in order to customize the typeface.
 		    @Override
@@ -67,6 +85,24 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 		        return convertView;
 		    }
 		};
+		// Instruct the adapter to load the images asynchronously.
+		mAdapter.setViewBinder(new ViewBinder() {
+			
+			public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+				if(view.getId() == android.R.id.icon) {
+					ImageView imageView = (ImageView)view.findViewById(android.R.id.icon);
+					String url = "http://gravatar.com/avatar/" +
+					        cursor.getString(1) + "?s=48&d=identicon";
+					DisplayImageOptions options = new DisplayImageOptions.Builder()
+			                .showStubImage(R.drawable.ic_gravatar_stub)
+			                .cacheInMemory(true)
+			                .build();
+					ImageLoader.getInstance().displayImage(url, imageView, options);
+					return true;
+				}
+				return false;
+			}
+		});
 		// Set the adapter and begin loading the data.
 		setListAdapter(mAdapter);
 		setListShown(false);
@@ -153,8 +189,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		// Create the query used by the adapter.
 		return new CursorLoader(getActivity(), ArticleProvider.CONTENT_URI, 
-				new String[] { Article.COLUMN_ID, Article.COLUMN_TITLE, Article.COLUMN_AUTHOR_NAME },
-				null, null, Article.COLUMN_CREATION_DATE + " DESC");
+				mColumns, null, null, Article.COLUMN_CREATION_DATE + " DESC");
 	}
 
 	// Called when the loader finishes.

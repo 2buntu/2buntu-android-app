@@ -15,10 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.twobuntu.db.ArticleProvider;
 import com.twobuntu.db.Article;
+import com.twobuntu.db.ArticleProvider;
 
 // Displays details about the particular article.
 public class ArticleDetailFragment extends Fragment {
@@ -43,7 +44,7 @@ public class ArticleDetailFragment extends Fragment {
 	// Generates the HTML for the entire page given the title and body to display.
 	@SuppressLint("SimpleDateFormat")
 	private String generateHTML(String title, String email_hash, long creation_date, String author, String body) {
-		String date = new SimpleDateFormat("MMMM dd, yyyy").format(new Date(creation_date * 1000));
+		String date = new SimpleDateFormat("MMMM d, yyyy").format(new Date(creation_date * 1000));
 		return "<html>" +
 	           "<head>" +
 	           "  <link rel='stylesheet' href='css/style.css'>" +
@@ -76,6 +77,7 @@ public class ArticleDetailFragment extends Fragment {
 		    cursor.moveToFirst();
 		    // Set the title and body.
 			WebView webView = (WebView)rootView.findViewById(R.id.article_content);
+			webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 			webView.loadDataWithBaseURL("file:///android_asset/", generateHTML(cursor.getString(0),
 			        cursor.getString(1), cursor.getLong(2), cursor.getString(3), cursor.getString(4)),
 			        "text/html", "utf-8", null);

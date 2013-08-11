@@ -9,7 +9,7 @@ public class ArticleHelper extends SQLiteOpenHelper {
 
 	// The name and version of the database.
 	private static final String DATABASE_NAME = "twobuntu";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 	
 	public ArticleHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

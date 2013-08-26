@@ -83,7 +83,7 @@ public class ArticleDetailFragment extends Fragment {
 			        "text/html", "utf-8", null);
 			// ...and remember the ID + URL.
 			mID  = getArguments().getLong(ARG_ARTICLE_ID);
-			mURL = cursor.getString(3);
+			mURL = cursor.getString(5);
 		}
 		return rootView;
 	}

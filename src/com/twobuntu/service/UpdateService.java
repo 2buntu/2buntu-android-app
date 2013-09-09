@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -49,13 +50,23 @@ public class UpdateService extends IntentService {
 	// Adds a notification indicating that a new article was added.
 	@SuppressWarnings("deprecation")
 	private void displayNotification(JSONObject article) throws JSONException {
-	    // Create the notification.
+	    // Begin building the notification.
 		Notification notification = new Notification.Builder(this)
 				.setAutoCancel(true)
 		        .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, ArticleListActivity.class), 0))
 		        .setContentTitle(getResources().getString(R.string.app_name))
 		        .setContentText(article.getString("title"))
                 .setSmallIcon(R.drawable.ic_stat_article).getNotification();
+        // Play the sound if requested.
+        String sound = mPreferences.getString("sound", "");
+        if(sound.length() > 0) {
+            notification.audioStreamType = AudioManager.STREAM_NOTIFICATION;
+            notification.sound = Uri.parse(sound);
+        }
+        // Also vibrate if requested.
+        if(mPreferences.getBoolean("vibrate", false))
+            notification.defaults |= Notification.DEFAULT_VIBRATE;
+        // Send the notification.
 		((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).notify(article.getInt("id"),
 				notification);
 	}

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twobuntu.twobuntu"
     android:installLocation="auto"
-    android:versionCode="11"
-    android:versionName="1.1.4" >
+    android:versionCode="12"
+    android:versionName="1.1.5" >
 
     <!-- This app will only run on Android 4.x+. -->
     <uses-sdk
@@ -11,9 +11,11 @@
         android:targetSdkVersion="18" />
     
     <!-- We require permission to retrieve files from the Internet
-         and to be notified when the system boots.  -->
+         and to be notified when the system boots. We also need to
+         use the vibrator if the user wishes to enable it later.  -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"

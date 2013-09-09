@@ -10,6 +10,10 @@
     <string name="activity_settings">2buntu Settings</string>
     <string name="intent_share_article">Share article via</string>
     <string name="title_refresh_interval">Refresh Interval</string>
+    <string name="title_sound">Sound</string>
+    <string name="title_vibrate">Vibrate</string>
     <string name="summary_refresh_interval">How often the app should check for new articles</string>
+    <string name="summary_sound">Sound to play when new articles are published</string>
+    <string name="summary_vibrate">Vibrate when new articles are published</string>
 
 </resources>

@@ -9,5 +9,17 @@
         android:entries="@array/intervals"
         android:entryValues="@array/interval_values"
         android:defaultValue="1800000" />
+    
+    <RingtonePreference
+        android:key="sound"
+        android:title="@string/title_sound"
+        android:summary="@string/summary_sound"
+        android:ringtoneType="notification" />
+    
+    <CheckBoxPreference
+        android:key="vibrate"
+        android:title="@string/title_vibrate"
+        android:summary="@string/summary_vibrate"
+        android:defaultValue="false" />
 
 </PreferenceScreen>

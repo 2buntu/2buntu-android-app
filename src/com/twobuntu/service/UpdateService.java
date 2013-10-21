@@ -23,9 +23,9 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.twobuntu.db.Article;
 import com.twobuntu.db.ArticleHelper;
 import com.twobuntu.db.ArticleProvider;
-import com.twobuntu.db.Article;
 import com.twobuntu.twobuntu.ArticleListActivity;
 import com.twobuntu.twobuntu.R;
 
@@ -77,8 +77,8 @@ public class UpdateService extends IntentService {
 	// obtained in one of the articles. This should eventually be fixed.
 	
 	// Processes the JSON received from the API.
-	private void processArticles(boolean notifications, JSONObject response) throws JSONException {
-		JSONArray articles = response.getJSONArray("articles");
+	private void processArticles(boolean notifications, String json, long min) throws JSONException {
+		JSONArray articles = new JSONArray(json);
 		ArrayList<ContentValues> articlesForInsertion = new ArrayList<ContentValues>();
 		// Used for storing the last modification time.
 		long lastUpdate = 0;
@@ -92,7 +92,7 @@ public class UpdateService extends IntentService {
 			if(cursor.getCount() == 0) {
 				Log.i("UpdateService", "New article '" + article.getString("title") + "'.");
 				articlesForInsertion.add(Article.convertToContentValues(article));
-				if(notifications)
+				if(notifications && article.getInt("published_date") >= min)
 				    displayNotification(article);
 			}
 			// Otherwise, update the existing article in-place.
@@ -102,7 +102,7 @@ public class UpdateService extends IntentService {
 				getContentResolver().update(uri, Article.convertToContentValues(article), null, null);
 			}
 			// Store the most recent update.
-			lastUpdate = Math.max(lastUpdate, article.getInt("last_modification_date"));
+			lastUpdate = Math.max(lastUpdate, article.getInt("modified_date"));
 		}
 		// If any articles are queued for insertion, then insert them.
 		if(articlesForInsertion.size() != 0)
@@ -125,9 +125,9 @@ public class UpdateService extends IntentService {
 		Log.i("UpdateService", "Performing scheduled update for range " + min + " - " + max + ".");
 		try {
 			// Read the raw JSON data from the server and parse it.
-			String json = IOUtils.toString(new URL("http://" + DOMAIN_NAME + "/api/articles?min=" + min +
-					"&max=" + max + "&sort=newest").openStream(), "utf-8");
-			processArticles(notifications, new JSONObject(json));
+			String json = IOUtils.toString(new URL("http://" + DOMAIN_NAME + "/api/1.1/articles/modified/?min=" + min +
+					"&max=" + max).openStream(), "utf-8");
+			processArticles(notifications, json, min);
 		} catch (Exception e) {
 			Log.e("UpdateService", "Error description: " + e.toString());
 		} finally {

@@ -69,12 +69,20 @@ li, p {
 /* Make sure alerts are styled properly. */
 .alert {
     background-color: #eee;
-    margin: 8px;
+    border-color: #ddd;
+    margin: 10px 0;
     overflow: auto;
     padding: 8px;
 }
 
-.alert img {
+.alert.alert-icon:before {
+    content: "";
     float: left;
-    margin: 0 4px 4px 0;
+    height: 48px;
+    margin: 0 16px 8px 0;
+    width: 48px;
 }
+
+.alert.alert-icon.alert-info:before    { background-image: url(../img/info.png); }
+.alert.alert-icon.alert-warning:before { background-image: url(../img/warning.png); }
+.alert.alert-icon.alert-danger:before  { background-image: url(../img/danger.png); }

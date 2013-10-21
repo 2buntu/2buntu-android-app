@@ -33,10 +33,8 @@ public class Article {
 		values.put(COLUMN_AUTHOR_EMAIL_HASH, author.getString("email_hash"));
 		values.put(COLUMN_TITLE, article.getString("title"));
 		values.put(COLUMN_BODY, article.getString("body"));
-		// Tags are inserted as comma-separated values.
-		values.put(COLUMN_TAGS, article.getJSONArray("tags").join(","));
-		values.put(COLUMN_CREATION_DATE, article.getInt("creation_date"));
-		values.put(COLUMN_LAST_MODIFICATION_DATE, article.getInt("last_modification_date"));
+		values.put(COLUMN_CREATION_DATE, article.getInt("published_date"));
+		values.put(COLUMN_LAST_MODIFICATION_DATE, article.getInt("modified_date"));
 		values.put(COLUMN_URL, article.getString("url"));
 		values.put(COLUMN_READ, false);
 		return values;

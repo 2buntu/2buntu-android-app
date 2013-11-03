@@ -2,13 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twobuntu.twobuntu"
     android:installLocation="auto"
-    android:versionCode="13"
-    android:versionName="1.1.6" >
+    android:versionCode="14"
+    android:versionName="1.1.7" >
 
     <!-- This app will only run on Android 4.x+. -->
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
     
     <!-- We require permission to retrieve files from the Internet
          and to be notified when the system boots. We also need to

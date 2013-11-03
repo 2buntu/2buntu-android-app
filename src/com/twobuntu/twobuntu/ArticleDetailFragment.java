@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -92,6 +93,9 @@ public class ArticleDetailFragment extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_article_detail, menu);
+		// Enable the print button if we are running on API level 19 or higher
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+			menu.getItem(R.id.menu_print).setVisible(true);
 	}
 	
 	// Process an item from the action bar.
@@ -103,6 +107,11 @@ public class ArticleDetailFragment extends Fragment {
 		    	Intent intent = new Intent(getActivity(), ArticleCommentsActivity.class);
 		    	intent.putExtra(ArticleCommentsFragment.ARG_ARTICLE_ID, mID);
 		    	startActivity(intent);
+		    	return true;
+		    }
+		    case R.id.menu_print:
+		    {
+		    	//...
 		    	return true;
 		    }
 		    case R.id.menu_share:

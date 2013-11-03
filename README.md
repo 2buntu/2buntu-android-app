@@ -21,6 +21,7 @@ on an actual Android device (the simulator is quite slow).
 
 You will also need:
 
+ - [Android Support Library](http://developer.android.com/tools/support-library/index.html)
  - [Apache Common's `IOUtils`](http://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/IOUtils.html).
  - [Android Universal Image Loader](https://github.com/nostra13/Android-Universal-Image-Loader)
 

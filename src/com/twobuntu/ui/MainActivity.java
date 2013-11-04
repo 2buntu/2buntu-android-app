@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -38,6 +39,13 @@ public class MainActivity extends FragmentActivity {
         		R.string.drawer_open,
         		R.string.drawer_close);
         drawerLayout.setDrawerListener(mDrawerToggle);
+	}
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item))
+            return true;
+        return super.onOptionsItemSelected(item);
 	}
 	
 	@Override

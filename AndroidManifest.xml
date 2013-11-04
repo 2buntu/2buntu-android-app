@@ -7,7 +7,7 @@
 
     <!-- This app will only run on Android 2.3+. -->
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
     
     <!-- We require permission to retrieve files from the Internet
@@ -21,11 +21,11 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/android:Theme.Holo.Light" >
         
         <!-- Displays a list of articles. -->
         <activity
-            android:name="com.twobuntu.ui.ArticleListActivity" >
+            android:name="com.twobuntu.ui.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

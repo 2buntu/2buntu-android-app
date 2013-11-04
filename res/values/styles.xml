@@ -1,31 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="@android:Theme.Holo.Light">
-		<item name="android:actionBarItemBackground">@drawable/selection</item>
-        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
-        <item name="android:actionMenuTextColor">@color/White</item>
-		<item name="android:listSelector">@drawable/selection</item>
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
     </style>
-    
-    <!-- Use Ubuntu colors for window title. -->
-    <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">@color/Orange</item>
-        <item name="android:displayOptions">showHome|useLogo</item>
-		<item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleText</item>
-    </style>
-	
-	<style name="AppTheme.ActionBar.TitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-		<item name="android:textColor">@color/White</item>
-	</style>
-	
-	<!-- Settings activity theme. -->
-	<style name="SettingsTheme" parent="@android:Theme.Holo">
-	    <item name="android:actionBarStyle">@style/SettingsTheme.ActionBar</item>
-	</style>
-	
-	<style name="SettingsTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:displayOptions">showHome|showTitle</item>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
 </resources>

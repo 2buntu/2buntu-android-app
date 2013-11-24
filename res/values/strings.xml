@@ -4,5 +4,10 @@
     <string name="app_name">2buntu</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    
+    <string name="drawer_item_articles">Articles</string>
+    <string name="drawer_item_authors">Authors</string>
+    <string name="drawer_item_search">Search</string>
+    <string name="drawer_item_settings">Settings</string>
 
 </resources>

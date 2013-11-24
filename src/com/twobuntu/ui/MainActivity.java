@@ -6,8 +6,11 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.twobuntu.twobuntu.R;
 
@@ -15,19 +18,51 @@ public class MainActivity extends FragmentActivity {
 	
 	ActionBarDrawerToggle mDrawerToggle;
 	
+	private class DrawerItem {
+		
+		int mTitleRes;
+		int mIconRes;
+		
+		DrawerItem(int titleRes, int iconRes) {
+			mTitleRes = titleRes;
+			mIconRes  = iconRes;
+		}
+	}
+
+	DrawerItem[] mDrawerItems = new DrawerItem[] {
+			new DrawerItem(R.string.drawer_item_articles, R.drawable.ic_nav_articles),
+			new DrawerItem(R.string.drawer_item_authors,  R.drawable.ic_nav_authors),
+			new DrawerItem(R.string.drawer_item_search,   R.drawable.ic_nav_search),
+			new DrawerItem(R.string.drawer_item_settings, R.drawable.ic_nav_settings)
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		String[] navigationTitles = getResources().getStringArray(R.array.navigation);
 		DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 		ListView drawerList = (ListView)findViewById(R.id.left_drawer);
 		
-		drawerList.setAdapter(new ArrayAdapter<String>(
+		drawerList.setAdapter(new ArrayAdapter<DrawerItem>(
 				this,
 				android.R.layout.simple_list_item_1,
-				navigationTitles));
+				mDrawerItems) {
+			
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				convertView = super.getView(position, convertView, parent);
+				TextView textView = (TextView)convertView.findViewById(android.R.id.text1);
+				textView.setText(mDrawerItems[position].mTitleRes);
+				textView.setCompoundDrawablesWithIntrinsicBounds(
+						mDrawerItems[position].mIconRes,
+						0,
+						0,
+						0);
+				textView.setCompoundDrawablePadding(20);
+				return convertView;
+			}
+		});
 		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);

@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 	DrawerLayout mDrawerLayout;
 	ActionBarDrawerToggle mDrawerToggle;
 	ListView mDrawerList;
+	String mTitle;
 	
 	private class DrawerItem {
 		
@@ -122,6 +123,7 @@ public class MainActivity extends Activity {
 			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 			
 			mDrawerList.setItemChecked(position, true);
+			setTitle(mDrawerItems[position].mTitleRes);
 	        mDrawerLayout.closeDrawer(mDrawerList);
 		} catch (Exception e) {
 			// Print a stack trace but ignore the exception

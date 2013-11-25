@@ -9,5 +9,12 @@
     <string name="drawer_item_authors">Authors</string>
     <string name="drawer_item_search">Search</string>
     <string name="drawer_item_settings">Settings</string>
+    
+    <string name="preference_title_refresh_interval">Refresh Interval</string>
+    <string name="preference_summary_refresh_interval">How often the app should check for new articles</string>
+    <string name="preference_title_sound">Sound</string>
+    <string name="preference_summary_sound">Sound to play when new articles are published</string>
+    <string name="preference_title_vibrate">Vibrate</string>
+    <string name="preference_summary_vibrate">Vibrate when new articles are published</string>
 
 </resources>

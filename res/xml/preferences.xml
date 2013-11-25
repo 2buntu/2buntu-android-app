@@ -1,3 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <ListPreference
+        android:key="refresh_interval"
+        android:title="@string/preference_title_refresh_interval"
+        android:summary="@string/preference_summary_refresh_interval"
+        android:dialogTitle="@string/preference_title_refresh_interval"
+        android:entries="@array/intervals"
+        android:entryValues="@array/interval_values"
+        android:defaultValue="1800000" />
+    
+    <RingtonePreference
+        android:key="sound"
+        android:title="@string/preference_title_sound"
+        android:summary="@string/preference_summary_sound"
+        android:ringtoneType="notification" />
+    
+    <CheckBoxPreference
+        android:key="vibrate"
+        android:title="@string/preference_title_vibrate"
+        android:summary="@string/preference_summary_vibrate"
+        android:defaultValue="false" />
+
 </PreferenceScreen>

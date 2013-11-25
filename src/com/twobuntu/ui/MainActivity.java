@@ -4,10 +4,12 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,7 +18,9 @@ import com.twobuntu.twobuntu.R;
 
 public class MainActivity extends FragmentActivity {
 	
+	DrawerLayout mDrawerLayout;
 	ActionBarDrawerToggle mDrawerToggle;
+	ListView mDrawerList;
 	
 	private class DrawerItem {
 		
@@ -41,12 +45,24 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-		ListView drawerList = (ListView)findViewById(R.id.left_drawer);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 		
-		drawerList.setAdapter(new ArrayAdapter<DrawerItem>(
+		mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        
+        mDrawerToggle = new ActionBarDrawerToggle(
+        		this,
+        		mDrawerLayout,
+        		R.drawable.ic_drawer,
+        		R.string.drawer_open,
+        		R.string.drawer_close);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+		
+		mDrawerList = (ListView)findViewById(R.id.left_drawer);
+		mDrawerList.setAdapter(new ArrayAdapter<DrawerItem>(
 				this,
-				android.R.layout.simple_list_item_1,
+				android.R.layout.simple_list_item_activated_1,
 				mDrawerItems) {
 			
 			@Override
@@ -63,17 +79,16 @@ public class MainActivity extends FragmentActivity {
 				return convertView;
 			}
 		});
+		mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				selectItem(position);
+			}
+		});
 		
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        
-        mDrawerToggle = new ActionBarDrawerToggle(
-        		this,
-        		drawerLayout,
-        		R.drawable.ic_drawer,
-        		R.string.drawer_open,
-        		R.string.drawer_close);
-        drawerLayout.setDrawerListener(mDrawerToggle);
+        if (savedInstanceState == null)
+            selectItem(0);
 	}
 	
 	@Override
@@ -94,4 +109,9 @@ public class MainActivity extends FragmentActivity {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+	
+	private void selectItem(int position) {
+		mDrawerList.setItemChecked(position, true);
+        mDrawerLayout.closeDrawer(mDrawerList);
+	}
 }

@@ -1,7 +1,15 @@
 package com.twobuntu.ui;
 
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.preference.PreferenceFragment;
 
-public class SettingsFragment extends Fragment {
+import com.twobuntu.twobuntu.R;
 
+public class SettingsFragment extends PreferenceFragment {
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.preferences);
+    }
 }

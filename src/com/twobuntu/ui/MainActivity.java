@@ -1,9 +1,11 @@
 package com.twobuntu.ui;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
@@ -16,7 +18,7 @@ import android.widget.TextView;
 
 import com.twobuntu.twobuntu.R;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 	
 	DrawerLayout mDrawerLayout;
 	ActionBarDrawerToggle mDrawerToggle;
@@ -26,18 +28,20 @@ public class MainActivity extends FragmentActivity {
 		
 		int mTitleRes;
 		int mIconRes;
+		Class<?> mFragmentClass;
 		
-		DrawerItem(int titleRes, int iconRes) {
-			mTitleRes = titleRes;
-			mIconRes  = iconRes;
+		DrawerItem(int titleRes, int iconRes, Class<?> fragmentClass) {
+			mTitleRes      = titleRes;
+			mIconRes       = iconRes;
+			mFragmentClass = fragmentClass;
 		}
 	}
 
 	DrawerItem[] mDrawerItems = new DrawerItem[] {
-			new DrawerItem(R.string.drawer_item_articles, R.drawable.ic_nav_articles),
-			new DrawerItem(R.string.drawer_item_authors,  R.drawable.ic_nav_authors),
-			new DrawerItem(R.string.drawer_item_search,   R.drawable.ic_nav_search),
-			new DrawerItem(R.string.drawer_item_settings, R.drawable.ic_nav_settings)
+			new DrawerItem(R.string.drawer_item_articles, R.drawable.ic_nav_articles, ArticleListFragment.class),
+			new DrawerItem(R.string.drawer_item_authors,  R.drawable.ic_nav_authors,  AuthorListFragment.class),
+			new DrawerItem(R.string.drawer_item_search,   R.drawable.ic_nav_search,   SearchFragment.class),
+			new DrawerItem(R.string.drawer_item_settings, R.drawable.ic_nav_settings, SettingsFragment.class)
 	};
 	
 	@Override
@@ -111,7 +115,17 @@ public class MainActivity extends FragmentActivity {
     }
 	
 	private void selectItem(int position) {
-		mDrawerList.setItemChecked(position, true);
-        mDrawerLayout.closeDrawer(mDrawerList);
+		try {
+			Fragment fragment = (Fragment)mDrawerItems[position].mFragmentClass.newInstance();
+			
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+			
+			mDrawerList.setItemChecked(position, true);
+	        mDrawerLayout.closeDrawer(mDrawerList);
+		} catch (Exception e) {
+			// Print a stack trace but ignore the exception
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,7 +1,8 @@
 package com.twobuntu.ui;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 
 public class AuthorDetailFragment extends Fragment {
 
+	//...
 }

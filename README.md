@@ -4,7 +4,7 @@ This project aims to provide a mobile application for the Android platform that
 will allow users to browse the articles on the website. This is a native 
 application written in Java.
 
-![2buntu App Screenshot](http://media.2buntu.com/images/2buntu-device-shot-small_3.png)
+![2buntu App Screenshot](http://2buntu.com/media/images/2buntu-device-shot-small_3.png)
 
 ## Getting the App
 

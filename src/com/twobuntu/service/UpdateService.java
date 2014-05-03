@@ -92,7 +92,7 @@ public class UpdateService extends IntentService {
 			if(cursor.getCount() == 0) {
 				Log.i("UpdateService", "New article '" + article.getString("title") + "'.");
 				articlesForInsertion.add(Article.convertToContentValues(article));
-				if(notifications && article.getInt("published_date") >= min)
+				if(notifications && article.getInt("date") >= min)
 				    displayNotification(article);
 			}
 			// Otherwise, update the existing article in-place.
@@ -102,7 +102,7 @@ public class UpdateService extends IntentService {
 				getContentResolver().update(uri, Article.convertToContentValues(article), null, null);
 			}
 			// Store the most recent update.
-			lastUpdate = Math.max(lastUpdate, article.getInt("modified_date"));
+			lastUpdate = Math.max(lastUpdate, article.getInt("date"));
 		}
 		// If any articles are queued for insertion, then insert them.
 		if(articlesForInsertion.size() != 0)
@@ -125,7 +125,7 @@ public class UpdateService extends IntentService {
 		Log.i("UpdateService", "Performing scheduled update for range " + min + " - " + max + ".");
 		try {
 			// Read the raw JSON data from the server and parse it.
-			String json = IOUtils.toString(new URL("http://" + DOMAIN_NAME + "/api/1.1/articles/modified/?min=" + min +
+			String json = IOUtils.toString(new URL("http://" + DOMAIN_NAME + "/api/1.2/articles/?min=" + min +
 					"&max=" + max).openStream(), "utf-8");
 			processArticles(notifications, json, min);
 		} catch (Exception e) {

@@ -88,6 +88,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 		// Instruct the adapter to load the images asynchronously.
 		mAdapter.setViewBinder(new ViewBinder() {
 			
+			@SuppressWarnings("deprecation")
 			public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 				if(view.getId() == android.R.id.icon) {
 					ImageView imageView = (ImageView)view.findViewById(android.R.id.icon);

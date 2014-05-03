@@ -8,13 +8,6 @@
         android:showAsAction="ifRoom|withText" />
     
     <item
-        android:id="@+id/menu_print"
-        android:icon="@drawable/ic_action_print"
-        android:title="@string/action_print"
-        android:showAsAction="ifRoom|withText"
-        android:visible="false" />
-    
-    <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_action_share"
         android:title="@string/action_share"

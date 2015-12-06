@@ -125,7 +125,7 @@ public class UpdateService extends IntentService {
 		Log.i("UpdateService", "Performing scheduled update for range " + min + " - " + max + ".");
 		try {
 			// Read the raw JSON data from the server and parse it.
-			String json = IOUtils.toString(new URL("http://" + DOMAIN_NAME + "/api/1.2/articles/?min=" + min +
+			String json = IOUtils.toString(new URL("https://" + DOMAIN_NAME + "/api/1.2/articles/?min=" + min +
 					"&max=" + max).openStream(), "utf-8");
 			processArticles(notifications, json, min);
 		} catch (Exception e) {
